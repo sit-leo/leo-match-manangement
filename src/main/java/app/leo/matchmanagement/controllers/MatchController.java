@@ -16,7 +16,7 @@ public class MatchController {
     private MatchService matchService;
 
     @GetMapping(path = "matches/{matchId:[\\d]}")
-    public ResponseEntity<Match> getProductsByShopId(@PathVariable Long matchId) {
+    public ResponseEntity<Match> getMatchByMatchId(@PathVariable Long matchId) {
         return new ResponseEntity<>(this.matchService.getMatchByMatchId(matchId), HttpStatus.OK);
     }
 }
