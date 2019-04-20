@@ -1,0 +1,73 @@
+# Java Maven CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-java/ for more details
+#
+version: 2
+jobs:
+  run-unit-test:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    working_directory: ~/repo
+    environment:
+      # Customize the JVM maximum heap limit
+      MAVEN_OPTS: -Xmx3200m
+    steps:
+      - run:
+          name: Sent Line Notification
+          command: $NOTIFY_WORKFLOW_START
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
+            - v1-dependencies-
+
+      - run: mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "pom.xml" }}
+      - run: mvn test
+
+  build-docker-image:
+    machine: true
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: mvn clean package
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker image build -t imgrbs/$IMAGE_NAME .
+      - run: docker push imgrbs/$IMAGE_NAME
+
+  deploy-docker-image:
+    machine: true
+    working_directory: ~/repo
+    steps:
+    - checkout
+    - add_ssh_keys:
+        fingerprints:
+          - $fingerprint
+    - run:
+        name: Deploying by Pull Docker Image Over SSH
+        command: |
+          ssh $OS_USER@$OS_IP \
+            'sudo docker pull imgrbs/sit-leo-match-manangement-api && \
+            sudo docker system prune -f && \
+            sudo docker container rm -f leo.match.manangement || true && \
+            sudo docker container run --name leo.match.manangement \
+              --env-file /app/env/leo.match.manangement.env \
+              --rm -ditp 8082:8080 imgrbs/sit-leo-match-manangement-api'
+    - run:
+        name: Sent Line Notification
+        command: $NOTIFY_WORKFLOW_SUCCESS
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+    - run-unit-test
+    - build-docker-image:
+        requires:
+        - run-unit-test
+    - deploy-docker-image:
+        requires:
+        - build-docker-image
