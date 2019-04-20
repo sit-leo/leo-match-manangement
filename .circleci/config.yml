@@ -50,12 +50,12 @@ jobs:
         name: Deploying by Pull Docker Image Over SSH
         command: |
           ssh $OS_USER@$OS_IP \
-            'sudo docker pull imgrbs/sit-leo-match-manangement-api && \
+            'sudo docker pull imgrbs/sit-leo-match-management-api && \
             sudo docker system prune -f && \
-            sudo docker container rm -f leo.match.manangement || true && \
-            sudo docker container run --name leo.match.manangement \
-              --env-file /app/env/leo.match.manangement.env \
-              --rm -ditp 8082:8080 imgrbs/sit-leo-match-manangement-api'
+            sudo docker container rm -f leo.match.management || true && \
+            sudo docker container run --name leo.match.management \
+              --env-file /app/env/leo.match.management.env \
+              --rm -ditp 8082:8080 imgrbs/sit-leo-match-management-api'
     - run:
         name: Sent Line Notification
         command: $NOTIFY_WORKFLOW_SUCCESS
