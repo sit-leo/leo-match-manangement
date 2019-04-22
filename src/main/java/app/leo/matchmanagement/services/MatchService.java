@@ -5,6 +5,8 @@ import app.leo.matchmanagement.repositories.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MatchService {
 
@@ -13,5 +15,9 @@ public class MatchService {
 
     public Match getMatchByMatchId(long id) {
         return this.matchRepository.getMatchById(id);
+    }
+
+    public List<Match> getCurrentMatchByApplicantMatchId(long applicantMatchId) {
+        return null;
     }
 }
