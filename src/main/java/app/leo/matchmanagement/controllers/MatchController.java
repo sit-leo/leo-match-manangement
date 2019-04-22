@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,5 +19,16 @@ public class MatchController {
     @GetMapping(path = "matches/{matchId:[\\d]}")
     public ResponseEntity<Match> getMatchByMatchId(@PathVariable Long matchId) {
         return new ResponseEntity<>(this.matchService.getMatchByMatchId(matchId), HttpStatus.OK);
+    }
+
+    @GetMapping(path="/applicant/matches")
+    public ResponseEntity<String> getMatchByApplicantMatchId(@RequestParam String status) {
+        long applicantMatchId = 1;
+        if (status.equals("current")) {
+            matchService.getCurrentMatchByApplicantMatchId(applicantMatchId);
+            return new ResponseEntity<>("current",HttpStatus.OK);
+        } else{
+            return new ResponseEntity<>("nothing",HttpStatus.NOT_FOUND);
+        }
     }
 }
