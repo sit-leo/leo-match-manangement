@@ -1,16 +1,14 @@
 package app.leo.matchmanagement.controllers;
 
 import app.leo.matchmanagement.dto.MatchDTO;
+import app.leo.matchmanagement.dto.User;
 import app.leo.matchmanagement.models.Match;
 import app.leo.matchmanagement.services.MatchService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +27,9 @@ public class MatchController {
     }
 
     @GetMapping(path="/applicant/matches")
-    public ResponseEntity<List<MatchDTO>> getMatchByApplicantId(@RequestParam String status) {
+    public ResponseEntity<List<MatchDTO>> getMatchByApplicantId(@RequestParam String status, @RequestAttribute("user") User user) {
+        System.out.println(user.getUserId());
+        System.out.println(user.getRole());
         ModelMapper modelMapper = new ModelMapper();
         List<MatchDTO> matchDTOList = new ArrayList<>();
         if (status.equals("current")) {
