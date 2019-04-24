@@ -19,6 +19,8 @@ public class Match implements Serializable {
     @NotNull
     private String name;
 
+    private String description;
+
     private Date startDate;
 
     private Date applicantRankingEndDate;
@@ -34,8 +36,9 @@ public class Match implements Serializable {
         this.name = name;
     }
 
-    public Match(@NotNull String name, Date startDate, Date applicantRankingEndDate, Date recruiterRankingEndDate, Date summaryRankingEndDate) {
+    public Match(@NotNull String name, String description, Date startDate, Date applicantRankingEndDate, Date recruiterRankingEndDate, Date summaryRankingEndDate) {
         this.name = name;
+        this.description = description;
         this.startDate = startDate;
         this.applicantRankingEndDate = applicantRankingEndDate;
         this.recruiterRankingEndDate = recruiterRankingEndDate;
@@ -88,5 +91,13 @@ public class Match implements Serializable {
 
     public void setSummaryRankingEndDate(Date summaryRankingEndDate) {
         this.summaryRankingEndDate = summaryRankingEndDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
