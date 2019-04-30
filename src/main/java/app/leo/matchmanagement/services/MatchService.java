@@ -1,6 +1,6 @@
 package app.leo.matchmanagement.services;
 
-import app.leo.matchmanagement.adapters.MatchAdapter;
+import app.leo.matchmanagement.adapters.MatchingAdapter;
 import app.leo.matchmanagement.models.Match;
 import app.leo.matchmanagement.repositories.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class MatchService {
     private MatchRepository matchRepository;
 
     @Autowired
-    private MatchAdapter matchAdapter;
+    private MatchingAdapter matchingAdapter;
 
     private final Date currentDate = new Date(119, Calendar.JANUARY,2);
 
@@ -27,22 +27,22 @@ public class MatchService {
     }
 
     public List<Match> getCurrentMatchByApplicantId() {
-        List<Long> matchId = matchAdapter.getMatchIdByApplicantId();
+        List<Long> matchId = matchingAdapter.getMatchIdByApplicantId();
         return matchRepository.getMatchesByStartDateBeforeAndApplicantRankingEndDateAfterAndIdIn(currentDate,currentDate,matchId);
     }
 
     public List<Match> getEndedMatchByApplicantId(){
-        List<Long> matchId = matchAdapter.getMatchIdByApplicantId();
+        List<Long> matchId = matchingAdapter.getMatchIdByApplicantId();
         return matchRepository.getMatchesByApplicantRankingEndDateBeforeAndIdIn(currentDate,matchId);
     }
 
     public List<Match> getCurrentMatchByRecruiterId() {
-        List<Long> matchId = matchAdapter.getMatchIdByRecruiterId();
+        List<Long> matchId = matchingAdapter.getMatchIdByRecruiterId();
         return matchRepository.getMatchesByStartDateBeforeAndApplicantRankingEndDateAfterAndIdIn(currentDate,currentDate,matchId);
     }
 
     public List<Match> getEndedMatchByRecruiterId(){
-        List<Long> matchId = matchAdapter.getMatchIdByRecruiterId();
+        List<Long> matchId = matchingAdapter.getMatchIdByRecruiterId();
         return matchRepository.getMatchesByApplicantRankingEndDateBeforeAndIdIn(currentDate,matchId);
     }
 }

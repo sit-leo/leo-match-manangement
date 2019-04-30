@@ -15,12 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class MatchAdapter {
+public class MatchingAdapter {
 
     @Value("${matching.api.url}")
     private String matchingApiUrl;
 
-    private Logger logger = LoggerFactory.getLogger(MatchAdapter.class);
+    private Logger logger = LoggerFactory.getLogger(MatchingAdapter.class);
 
     public List<Long> getMatchIdByApplicantId(){
         List<Long> matchIdList = new ArrayList<>();
