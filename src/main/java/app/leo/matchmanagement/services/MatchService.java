@@ -6,6 +6,7 @@ import app.leo.matchmanagement.repositories.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -18,35 +19,30 @@ public class MatchService {
     @Autowired
     private MatchAdapter matchAdapter;
 
+    private final Date currentDate = new Date(119, Calendar.JANUARY,2);
+
+
     public Match getMatchByMatchId(long id) {
         return this.matchRepository.getMatchById(id);
     }
 
     public List<Match> getCurrentMatchByApplicantId() {
         List<Long> matchId = matchAdapter.getMatchIdByApplicantId();
-        Date currentDate = new Date(119,00,02);
-        List<Match> matches = matchRepository.getMatchesByStartDateBeforeAndApplicantRankingEndDateAfterAndIdIn(currentDate,currentDate,matchId);
-        return matches;
+        return matchRepository.getMatchesByStartDateBeforeAndApplicantRankingEndDateAfterAndIdIn(currentDate,currentDate,matchId);
     }
 
     public List<Match> getEndedMatchByApplicantId(){
         List<Long> matchId = matchAdapter.getMatchIdByApplicantId();
-        Date currentDate = new Date(119,00,02);
-        List<Match> matches = matchRepository.getMatchesByApplicantRankingEndDateBeforeAndIdIn(currentDate,matchId);
-        return matches;
+        return matchRepository.getMatchesByApplicantRankingEndDateBeforeAndIdIn(currentDate,matchId);
     }
 
     public List<Match> getCurrentMatchByRecruiterId() {
         List<Long> matchId = matchAdapter.getMatchIdByRecruiterId();
-        Date currentDate = new Date(119,00,02);
-        List<Match> matches = matchRepository.getMatchesByStartDateBeforeAndApplicantRankingEndDateAfterAndIdIn(currentDate,currentDate,matchId);
-        return matches;
+        return matchRepository.getMatchesByStartDateBeforeAndApplicantRankingEndDateAfterAndIdIn(currentDate,currentDate,matchId);
     }
 
     public List<Match> getEndedMatchByRecruiterId(){
         List<Long> matchId = matchAdapter.getMatchIdByRecruiterId();
-        Date currentDate = new Date(119,00,02);
-        List<Match> matches = matchRepository.getMatchesByApplicantRankingEndDateBeforeAndIdIn(currentDate,matchId);
-        return matches;
+        return matchRepository.getMatchesByApplicantRankingEndDateBeforeAndIdIn(currentDate,matchId);
     }
 }
