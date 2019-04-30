@@ -22,54 +22,68 @@ public class MatchController {
     @GetMapping(path = "matches/{matchId:[\\d]}")
     public ResponseEntity<MatchDTO> getMatchByMatchId(@PathVariable Long matchId) {
         ModelMapper modelMapper = new ModelMapper();
-        MatchDTO matchDTO = modelMapper.map(this.matchService.getMatchByMatchId(matchId),MatchDTO.class);
-        return new ResponseEntity<>(matchDTO, HttpStatus.OK);
+        MatchDTO matchResponse = modelMapper.map(this.matchService.getMatchByMatchId(matchId),MatchDTO.class);
+        return new ResponseEntity<>(matchResponse, HttpStatus.OK);
     }
 
     @GetMapping(path="/applicant/matches")
     public ResponseEntity<List<MatchDTO>> getMatchByApplicantId(@RequestParam String status, @RequestAttribute("user") User user) {
-        System.out.println(user.getUserId());
-        System.out.println(user.getRole());
-        ModelMapper modelMapper = new ModelMapper();
         List<MatchDTO> matchDTOList = new ArrayList<>();
         if (status.equals("current")) {
             List<Match> matches =matchService.getCurrentMatchByApplicantId();
-            for(Match match:matches) {
-                MatchDTO matchDTO = modelMapper.map(match, MatchDTO.class);
-                matchDTOList.add(matchDTO);
-            }
-            return new ResponseEntity<>(matchDTOList,HttpStatus.OK);
+            return new ResponseEntity<>(mapMatchListToMatchResponseList(matches),HttpStatus.OK);
         } else if(status.equals("ended")){
             List<Match> matches = matchService.getEndedMatchByApplicantId();
-            for(Match match:matches) {
-                MatchDTO matchDTO = modelMapper.map(match, MatchDTO.class);
-                matchDTOList.add(matchDTO);
-            }
-            return new ResponseEntity<>(matchDTOList,HttpStatus.OK);
+            return new ResponseEntity<>(mapMatchListToMatchResponseList(matches),HttpStatus.OK);
         }
         return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
     }
 
+    private List<MatchDTO> mapMatchListToMatchResponseList(List<Match> matchList){
+        ModelMapper modelMapper = new ModelMapper();
+        List<MatchDTO> matchResponseList = new ArrayList<>();
+        for(Match match: matchList) {
+            MatchDTO matchDTO = modelMapper.map(match, MatchDTO.class);
+            matchResponseList.add(matchDTO);
+        }
+        return  matchResponseList;
+    }
+
     @GetMapping(path ="/recruiter/matches")
     public ResponseEntity<List<MatchDTO>> getMatchByRecruiterId(@RequestParam String status){
-        ModelMapper modelMapper = new ModelMapper();
-        List<MatchDTO> matchDTOList = new ArrayList<>();
         if (status.equals("current")) {
             List<Match> matches =matchService.getCurrentMatchByRecruiterId();
-            for(Match match:matches) {
-                MatchDTO matchDTO = modelMapper.map(match, MatchDTO.class);
-                matchDTOList.add(matchDTO);
-            }
-            return new ResponseEntity<>(matchDTOList,HttpStatus.OK);
+            return new ResponseEntity<>(mapMatchListToMatchResponseList(matches),HttpStatus.OK);
         }else if(status.equals("ended")){
             List<Match> matches = matchService.getEndedMatchByApplicantId();
-            for(Match match:matches) {
-                MatchDTO matchDTO = modelMapper.map(match, MatchDTO.class);
-                matchDTOList.add(matchDTO);
-            }
-            return new ResponseEntity<>(matchDTOList,HttpStatus.OK);
+            return new ResponseEntity<>(mapMatchListToMatchResponseList(matches),HttpStatus.OK);
         }
         return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+    }
 
+    @GetMapping(path = "/user/matches")
+    public ResponseEntity<List<MatchDTO>> getMatchByUserId(@RequestParam String status,@RequestAttribute("user") User user){
+        String role = user.getRole();
+        switch (role){
+            case "applicant":
+                if (status.equals("current")) {
+                    List<Match> matches =matchService.getCurrentMatchByApplicantId();
+                    return new ResponseEntity<>(mapMatchListToMatchResponseList(matches),HttpStatus.OK);
+                } else if(status.equals("ended")){
+                    List<Match> matches = matchService.getEndedMatchByApplicantId();
+                    return new ResponseEntity<>(mapMatchListToMatchResponseList(matches),HttpStatus.OK);
+                }
+                break;
+            case "recruiter":
+                if (status.equals("current")) {
+                    List<Match> matches =matchService.getCurrentMatchByRecruiterId();
+                    return new ResponseEntity<>(mapMatchListToMatchResponseList(matches),HttpStatus.OK);
+                }else if(status.equals("ended")){
+                    List<Match> matches = matchService.getEndedMatchByApplicantId();
+                    return new ResponseEntity<>(mapMatchListToMatchResponseList(matches),HttpStatus.OK);
+                }
+                break;
+        }
+        return  new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
     }
 }
