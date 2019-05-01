@@ -24,6 +24,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         String token = getToken(request);
         User user = this.getUserFromToken(token);
         request.setAttribute("user", user);
+        request.setAttribute("token", token);
         return true;
     }
 
@@ -41,8 +42,12 @@ public class TokenInterceptor implements HandlerInterceptor {
         return token;
     }
 
+    private String parseToken(String token) {
+        return token.substring(7);
+    }
+
     private User getUserFromToken(String token) {
-        String tokenFormat = token.substring(7);
+        String tokenFormat = this.parseToken(token);
 
         Jws<Claims> claims = Jwts.parser()
                 .setSigningKey(this.SECRET)
