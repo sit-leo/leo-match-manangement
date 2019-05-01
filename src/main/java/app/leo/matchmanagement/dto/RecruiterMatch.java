@@ -1,29 +1,7 @@
 package app.leo.matchmanagement.dto;
 
-public class RecruiterMatch {
-
-
-    private Long id;
-
-    private long matchId;
-
+public class RecruiterMatch extends UserMatch {
     private long recruiterId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public long getMatchId() {
-        return matchId;
-    }
-
-    public void setMatchId(long matchId) {
-        this.matchId = matchId;
-    }
 
     public long getRecruiterId() {
         return recruiterId;
