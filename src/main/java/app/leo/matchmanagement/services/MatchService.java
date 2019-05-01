@@ -26,23 +26,13 @@ public class MatchService {
         return this.matchRepository.getMatchById(id);
     }
 
-    public List<Match> getCurrentMatchByApplicantId(String token) {
-        List<Long> matchId = matchingAdapter.getMatchIdByApplicantId(token );
+    public List<Match> getCurrentMatchByUserId(String token) {
+        List<Long> matchId = matchingAdapter.getMatchIdByUserId(token);
         return matchRepository.getMatchesByStartDateBeforeAndApplicantRankingEndDateAfterAndIdIn(currentDate,currentDate,matchId);
     }
 
-    public List<Match> getEndedMatchByApplicantId(String token){
-        List<Long> matchId = matchingAdapter.getMatchIdByApplicantId(token );
-        return matchRepository.getMatchesByApplicantRankingEndDateBeforeAndIdIn(currentDate,matchId);
-    }
-
-    public List<Match> getCurrentMatchByRecruiterId(String token) {
-        List<Long> matchId = matchingAdapter.getMatchIdByRecruiterId(token);
-        return matchRepository.getMatchesByStartDateBeforeAndApplicantRankingEndDateAfterAndIdIn(currentDate,currentDate,matchId);
-    }
-
-    public List<Match> getEndedMatchByRecruiterId(String token){
-        List<Long> matchId = matchingAdapter.getMatchIdByRecruiterId(token);
+    public List<Match> getEndedMatchByUserId(String token){
+        List<Long> matchId = matchingAdapter.getMatchIdByUserId(token);
         return matchRepository.getMatchesByApplicantRankingEndDateBeforeAndIdIn(currentDate,matchId);
     }
 }
