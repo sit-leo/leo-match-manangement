@@ -1,23 +1,23 @@
 package app.leo.matchmanagement.dto;
 
 public class UserMatch  {
-    private long id;
+    private long participantId;
     private long matchId;
 
     public UserMatch() {
     }
 
-    public UserMatch(long id, long matchId) {
-        this.id = id;
+    public UserMatch(long participantId, long matchId) {
+        this.participantId = participantId;
         this.matchId = matchId;
     }
 
-    public long getId() {
-        return id;
+    public long getParticipantId() {
+        return participantId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setParticipantId(long participantId) {
+        this.participantId = participantId;
     }
 
     public long getMatchId() {
