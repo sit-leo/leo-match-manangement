@@ -8,6 +8,8 @@ public class MatchDTO {
 
     private String name;
 
+    private String description;
+
     private Date startDate;
 
     private Date applicantRankingEndDate;
@@ -74,5 +76,13 @@ public class MatchDTO {
 
     public void setSummaryRankingEndDate(Date summaryRankingEndDate) {
         this.summaryRankingEndDate = summaryRankingEndDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
