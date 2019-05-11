@@ -16,6 +16,8 @@ public class Position {
 
     private RecruiterMatch recruiterMatch;
 
+    private String money;
+
     public Long getId() {
         return id;
     }
@@ -46,6 +48,14 @@ public class Position {
 
     public void setMatchId(long matchId) {
         this.matchId = matchId;
+    }
+
+    public String getMoney() {
+        return money;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
     }
 
     public List<RecruiterRanking> getRecruiterRankings() {
