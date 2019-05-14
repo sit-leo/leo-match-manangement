@@ -1,9 +1,6 @@
 package app.leo.matchmanagement.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
@@ -21,13 +18,13 @@ public class Match implements Serializable {
 
     private String description;
 
-    private Date startDate;
+    private Date startJoiningDate;
 
     private Date applicantRankingEndDate;
 
     private Date recruiterRankingEndDate;
 
-    private Date summaryRankingEndDate;
+    private Date announceDate;
 
     public Match() {
     }
@@ -36,13 +33,13 @@ public class Match implements Serializable {
         this.name = name;
     }
 
-    public Match(@NotNull String name, String description, Date startDate, Date applicantRankingEndDate, Date recruiterRankingEndDate, Date summaryRankingEndDate) {
+    public Match(@NotNull String name, String description, Date startJoiningDate, Date applicantRankingEndDate, Date recruiterRankingEndDate, Date announceDate) {
         this.name = name;
         this.description = description;
-        this.startDate = startDate;
+        this.startJoiningDate = startJoiningDate;
         this.applicantRankingEndDate = applicantRankingEndDate;
         this.recruiterRankingEndDate = recruiterRankingEndDate;
-        this.summaryRankingEndDate = summaryRankingEndDate;
+        this.announceDate = announceDate;
     }
 
     public Long getId() {
@@ -61,12 +58,12 @@ public class Match implements Serializable {
         this.name = name;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Date getStartJoiningDate() {
+        return startJoiningDate;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setStartJoiningDate(Date startJoiningDate) {
+        this.startJoiningDate = startJoiningDate;
     }
 
     public Date getApplicantRankingEndDate() {
@@ -85,12 +82,12 @@ public class Match implements Serializable {
         this.recruiterRankingEndDate = recruiterRankingEndDate;
     }
 
-    public Date getSummaryRankingEndDate() {
-        return summaryRankingEndDate;
+    public Date getAnnounceDate() {
+        return announceDate;
     }
 
-    public void setSummaryRankingEndDate(Date summaryRankingEndDate) {
-        this.summaryRankingEndDate = summaryRankingEndDate;
+    public void setAnnounceDate(Date announceDate) {
+        this.announceDate = announceDate;
     }
 
     public String getDescription() {

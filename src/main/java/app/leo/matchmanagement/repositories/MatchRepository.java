@@ -13,7 +13,7 @@ public interface MatchRepository extends JpaRepository<Match,Long> {
 
     Match getMatchById(long id);
 
-    List<Match> getMatchesByStartDateBeforeAndApplicantRankingEndDateAfterAndIdIn(Date currentDateBeforeStartDate, Date currentDateAfterApplicantRankingEndDate, Collection<Long> matchIdList);
+    List<Match> getMatchesByStartJoiningDateBeforeAndApplicantRankingEndDateAfterAndIdIn(Date currentDateBeforeStartDate, Date currentDateAfterApplicantRankingEndDate, Collection<Long> matchIdList);
 
     List<Match> getMatchesByApplicantRankingEndDateBeforeAndIdIn(Date currentDate,Collection<Long> matchIdList);
 }

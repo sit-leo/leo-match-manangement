@@ -28,7 +28,7 @@ public class MatchService {
 
     public List<Match> getCurrentMatchByUserId(String token) {
         List<Long> matchId = matchingAdapter.getMatchIdByUserId(token);
-        return matchRepository.getMatchesByStartDateBeforeAndApplicantRankingEndDateAfterAndIdIn(currentDate,currentDate,matchId);
+        return matchRepository.getMatchesByStartJoiningDateBeforeAndApplicantRankingEndDateAfterAndIdIn(currentDate,currentDate,matchId);
     }
 
     public List<Match> getEndedMatchByUserId(String token){

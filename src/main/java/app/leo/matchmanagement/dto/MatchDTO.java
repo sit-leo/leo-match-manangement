@@ -10,24 +10,25 @@ public class MatchDTO {
 
     private String description;
 
-    private Date startDate;
+    private Date startJoiningDate;
 
     private Date applicantRankingEndDate;
 
     private Date recruiterRankingEndDate;
 
-    private Date summaryRankingEndDate;
+    private Date announceDate;
 
     public MatchDTO() {
     }
 
-    public MatchDTO(Long id, String name, Date startDate, Date applicantRankingEndDate, Date recruiterRankingEndDate, Date summaryRankingEndDate) {
+    public MatchDTO(Long id, String name, String description, Date startJoiningDate, Date applicantRankingEndDate, Date recruiterRankingEndDate, Date announceDate) {
         this.id = id;
         this.name = name;
-        this.startDate = startDate;
+        this.description = description;
+        this.startJoiningDate = startJoiningDate;
         this.applicantRankingEndDate = applicantRankingEndDate;
         this.recruiterRankingEndDate = recruiterRankingEndDate;
-        this.summaryRankingEndDate = summaryRankingEndDate;
+        this.announceDate = announceDate;
     }
 
     public Long getId() {
@@ -46,12 +47,12 @@ public class MatchDTO {
         this.name = name;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Date getStartJoiningDate() {
+        return startJoiningDate;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setStartJoiningDate(Date startJoiningDate) {
+        this.startJoiningDate = startJoiningDate;
     }
 
     public Date getApplicantRankingEndDate() {
@@ -70,12 +71,12 @@ public class MatchDTO {
         this.recruiterRankingEndDate = recruiterRankingEndDate;
     }
 
-    public Date getSummaryRankingEndDate() {
-        return summaryRankingEndDate;
+    public Date getAnnounceDate() {
+        return announceDate;
     }
 
-    public void setSummaryRankingEndDate(Date summaryRankingEndDate) {
-        this.summaryRankingEndDate = summaryRankingEndDate;
+    public void setAnnounceDate(Date announceDate) {
+        this.announceDate = announceDate;
     }
 
     public String getDescription() {
