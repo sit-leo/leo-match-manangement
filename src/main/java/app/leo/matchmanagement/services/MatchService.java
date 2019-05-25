@@ -6,7 +6,9 @@ import app.leo.matchmanagement.repositories.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 
@@ -19,8 +21,7 @@ public class MatchService {
     @Autowired
     private MatchingAdapter matchingAdapter;
 
-    private final Date currentDate = new Date(119, Calendar.JANUARY,2);
-
+    private final Date currentDate =  java.sql.Date.valueOf(LocalDate.now(ZoneId.of("Asia/Bangkok")));
 
     public Match getMatchByMatchId(long id) {
         return this.matchRepository.getMatchById(id);
