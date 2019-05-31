@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 
@@ -29,11 +28,11 @@ public class MatchService {
 
     public List<Match> getCurrentMatchByUserId(String token) {
         List<Long> matchId = matchingAdapter.getMatchIdByUserId(token);
-        return matchRepository.getMatchesByStartJoiningDateBeforeAndApplicantRankingEndDateAfterAndIdIn(currentDate,currentDate,matchId);
+        return matchRepository.getMatchesByStartJoiningDateBeforeAndAnnouceDateAfterAndIdIn(currentDate,matchId);
     }
 
     public List<Match> getEndedMatchByUserId(String token){
         List<Long> matchId = matchingAdapter.getMatchIdByUserId(token);
-        return matchRepository.getMatchesByApplicantRankingEndDateBeforeAndIdIn(currentDate,matchId);
+        return matchRepository.getMatchesByAnnounceDateEndDateAfterAndIdIn(currentDate,matchId);
     }
 }
