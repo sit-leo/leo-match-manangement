@@ -1,6 +1,7 @@
 package app.leo.matchmanagement.interceptors;
 
 import app.leo.matchmanagement.dto.User;
+import app.leo.matchmanagement.exceptions.BadRequestException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -17,7 +18,7 @@ public class TokenInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws BadRequestException {
         if (this.isOptionMethod(request)) {
             return true;
         }
@@ -31,14 +32,17 @@ public class TokenInterceptor implements HandlerInterceptor {
     private boolean isValidToken (String token){
         if (token == null) {
             return false;
-        } else if (token.startsWith("Bearer") == false || token.equals("")) {
+        } else if (token.startsWith("Bearer") == false || token.equals("")||token.length()< 7) {
             return false;
         }
         return true;
     }
 
-    private String getToken (HttpServletRequest httpServletRequest) {
+    private String getToken (HttpServletRequest httpServletRequest) throws BadRequestException{
         String token = httpServletRequest.getHeader("Authorization");
+        if (this.isValidToken(token) == false) {
+            throw new BadRequestException("Invalid authorization provided.");
+        }
         return token;
     }
 
