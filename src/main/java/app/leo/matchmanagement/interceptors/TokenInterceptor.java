@@ -42,7 +42,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             return false;
         } else if (!token.startsWith("Bearer") ||token.length() < 7) {
             return false;
-        }else if(isExpires(token)){
+        } else if(isExpires(token)){
             return false;
         }
         return true;
