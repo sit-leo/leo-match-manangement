@@ -18,6 +18,8 @@ public class Match implements Serializable {
 
     private String description;
 
+    private String pictureUrl;
+
     private Date startJoiningDate;
 
     private Date applicantRankingEndDate;
@@ -96,5 +98,13 @@ public class Match implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }
