@@ -57,8 +57,6 @@ public class TokenInterceptor implements HandlerInterceptor {
         getTokenRequest.setUsername(username);
 
         TokenDTO tokenDTO = userAdapter.getTokenByUsernameAndToken(getTokenRequest.getToken());
-        System.out.println(new Date(System.currentTimeMillis()));
-        System.out.println(new Date(System.currentTimeMillis()).after(tokenDTO.getExpiresTime()));
         return new Date(System.currentTimeMillis()).after(tokenDTO.getExpiresTime());
     }
 
