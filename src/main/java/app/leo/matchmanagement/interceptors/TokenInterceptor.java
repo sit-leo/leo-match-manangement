@@ -63,7 +63,7 @@ public class TokenInterceptor implements HandlerInterceptor {
     private String getToken (HttpServletRequest httpServletRequest) throws BadRequestException {
         String token = httpServletRequest.getHeader("Authorization");
         if (!this.isValidToken(token)) {
-            userAdapter.deleteAllTokenByUsername(getUsernameFromToken(token));
+            userAdapter.deleteAllTokenByUsername(token);
             throw new BadRequestException("Invalid authorization provided.");
         }
         return token;
