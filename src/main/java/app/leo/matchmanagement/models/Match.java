@@ -26,6 +26,8 @@ public class Match implements Serializable {
 
     private Date startJoiningDate;
 
+    private Date endJoiningDate;
+
     private Date applicantRankingEndDate;
 
     private Date recruiterRankingEndDate;
@@ -121,6 +123,15 @@ public class Match implements Serializable {
     public LocalDateTime getCreateAt() {
         return createAt;
     }
+
+    public Date getEndJoiningDate() {
+        return endJoiningDate;
+    }
+
+    public void setEndJoiningDate(Date endJoiningDate) {
+        this.endJoiningDate = endJoiningDate;
+    }
+
 
     public LocalDateTime getUpdateAt() {
         return updateAt;
