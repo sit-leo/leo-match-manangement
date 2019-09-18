@@ -6,12 +6,18 @@ import app.leo.matchmanagement.models.Match;
 import app.leo.matchmanagement.services.MatchService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Optional.of;
 
 @RestController
 public class MatchController {
@@ -51,4 +57,12 @@ public class MatchController {
         }
         return  new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping("/matches/all/page/{pageNumber}")
+    public ResponseEntity<Page<Match>> getMatchWithPageNumber(@PathVariable int pageNumber){
+        Pageable pageable = PageRequest.of(pageNumber-1,6, Sort.by("announceDate"));
+        return new ResponseEntity<>(matchService.findAll(pageable),HttpStatus.OK);
+    }
+
+
 }

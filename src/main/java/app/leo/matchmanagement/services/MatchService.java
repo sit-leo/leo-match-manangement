@@ -4,6 +4,8 @@ import app.leo.matchmanagement.adapters.MatchingAdapter;
 import app.leo.matchmanagement.models.Match;
 import app.leo.matchmanagement.repositories.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -34,5 +36,9 @@ public class MatchService {
     public List<Match> getEndedMatchByUserId(String token){
         List<Long> matchId = matchingAdapter.getMatchIdByUserId(token);
         return matchRepository.getMatchesByAnnounceDateEndDateAfterAndIdIn(currentDate,matchId);
+    }
+
+    public Page<Match> findAll(Pageable pagenable){
+        return  matchRepository.findAll(pagenable);
     }
 }
