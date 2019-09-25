@@ -41,4 +41,8 @@ public class MatchService {
     public Page<Match> findAll(Pageable pagenable){
         return  matchRepository.findAll(pagenable);
     }
+
+    public Page<Match> getLastChanceMatches(Pageable pageable){
+        return matchRepository.getLastChanceMatches(pageable);
+    }
 }
