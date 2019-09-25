@@ -58,11 +58,22 @@ public class MatchController {
         return  new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/matches/all/page/{pageNumber}")
-    public ResponseEntity<Page<Match>> getMatchWithPageNumber(@PathVariable int pageNumber){
-        Pageable pageable = PageRequest.of(pageNumber-1,6, Sort.by("announceDate"));
+    @GetMapping("/matches/lastest")
+    public ResponseEntity<Page<Match>> getLatestMatchWithPageNumber(@RequestParam("page") int pageNumber){
+        Pageable pageable = PageRequest.of(pageNumber-1,6, Sort.by("createAt").descending());
         return new ResponseEntity<>(matchService.findAll(pageable),HttpStatus.OK);
     }
 
+    @GetMapping("/matches/last-chance")
+    public ResponseEntity<Page<Match>> getLastChanceMatchWithPageNumber(@RequestParam("page") int pageNumber){
+        Pageable pageable = PageRequest.of(pageNumber-1,6);
+        return new ResponseEntity<>(matchService.getLastChanceMatches(pageable),HttpStatus.OK);
+    }
+
+    @GetMapping("/matches/popular")
+    public ResponseEntity<Page<Match>> getPopularMatchesWithPageNumber(@RequestParam("page") int pageNumber){
+        Pageable pageable = PageRequest.of(pageNumber-1, 6, Sort.by("popularity").ascending());
+        return new ResponseEntity<>(matchService.findAll(pageable),HttpStatus.OK);
+    }
 
 }
