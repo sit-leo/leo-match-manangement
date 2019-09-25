@@ -40,6 +40,15 @@ public class Match implements Serializable {
     @UpdateTimestamp
     private LocalDateTime updateAt;
 
+    @Column(columnDefinition = "integer default 0")
+    private int numOfRecruiter;
+
+    @Column(columnDefinition = "integer default 0")
+    private int numOfApplicant;
+
+    @Column(columnDefinition = "integer default 0")
+    private int popularity;
+
     public Match() {
     }
 
@@ -132,8 +141,31 @@ public class Match implements Serializable {
         this.endJoiningDate = endJoiningDate;
     }
 
-
     public LocalDateTime getUpdateAt() {
         return updateAt;
+    }
+
+    public int getNumOfRecruiter() {
+        return numOfRecruiter;
+    }
+
+    public void setNumOfRecruiter(int numOfRecruiter) {
+        this.numOfRecruiter = numOfRecruiter;
+    }
+
+    public int getNumOfApplicant() {
+        return numOfApplicant;
+    }
+
+    public void setNumOfApplicant(int numOfApplicant) {
+        this.numOfApplicant = numOfApplicant;
+    }
+
+    public int getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(int popularity) {
+        this.popularity = popularity;
     }
 }
