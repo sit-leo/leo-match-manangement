@@ -72,7 +72,7 @@ public class MatchController {
 
     @GetMapping("/matches/popular")
     public ResponseEntity<Page<Match>> getPopularMatchesWithPageNumber(@RequestParam("page") int pageNumber){
-        Pageable pageable = PageRequest.of(pageNumber-1, 3, Sort.by("popularity").ascending());
+        Pageable pageable = PageRequest.of(pageNumber-1, 3, Sort.by("popularity").descending());
         return new ResponseEntity<>(matchService.findAll(pageable),HttpStatus.OK);
     }
 
