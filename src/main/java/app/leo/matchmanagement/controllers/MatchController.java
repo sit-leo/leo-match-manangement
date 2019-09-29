@@ -25,7 +25,7 @@ public class MatchController {
     @Autowired
     private MatchService matchService;
 
-    @GetMapping(path = "matches/{matchId:[\\d]}")
+    @GetMapping(path = "matches/{matchId}")
     public ResponseEntity<MatchDTO> getMatchByMatchId(@PathVariable Long matchId) {
         ModelMapper modelMapper = new ModelMapper();
         MatchDTO matchResponse = modelMapper.map(this.matchService.getMatchByMatchId(matchId),MatchDTO.class);
@@ -42,6 +42,15 @@ public class MatchController {
         return  matchResponseList;
     }
 
+    @PutMapping("/matches/{matchId}/join")
+    public ResponseEntity<MatchDTO> updateNumberOfApplicantAndNumberOfRecruiterInMatch(@RequestAttribute("user") User user,
+                                                                                    @PathVariable long matchId){
+        Match match = matchService.getMatchByMatchId(matchId);
+        match = matchService.updateNumberOfUser(user,match);
+        ModelMapper mapper = new ModelMapper();
+        MatchDTO matchDTO = mapper.map(match,MatchDTO.class);
+        return new ResponseEntity<>(matchDTO,HttpStatus.OK);
+    }
     @GetMapping(path = "/user/matches")
     public ResponseEntity<List<MatchDTO>> getMatchByUserId(
             @RequestParam String status,
