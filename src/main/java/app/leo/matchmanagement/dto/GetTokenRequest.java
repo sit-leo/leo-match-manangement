@@ -4,6 +4,7 @@ public class GetTokenRequest {
 
     private String username;
     private String token;
+    private long profileId;
 
     public GetTokenRequest() {
     }
@@ -22,6 +23,14 @@ public class GetTokenRequest {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public long getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(long profileId) {
+        this.profileId = profileId;
     }
 }
 

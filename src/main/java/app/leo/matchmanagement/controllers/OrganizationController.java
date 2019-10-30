@@ -1,0 +1,55 @@
+package app.leo.matchmanagement.controllers;
+
+import app.leo.matchmanagement.adapters.ProfileAdapter;
+import app.leo.matchmanagement.dto.ApplicantInMemberList;
+import app.leo.matchmanagement.dto.MatchDTO;
+import app.leo.matchmanagement.dto.RecruiterInMemberList;
+import app.leo.matchmanagement.dto.User;
+import app.leo.matchmanagement.exceptions.WrongRoleException;
+import app.leo.matchmanagement.models.Match;
+import app.leo.matchmanagement.services.MatchService;
+import app.leo.matchmanagement.services.OrganizationService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+public class OrganizationController {
+
+    @Autowired
+    private MatchService matchService;
+
+    @Autowired
+    private ProfileAdapter profileAdapter;
+
+    @Autowired
+    private OrganizationService organizationService;
+
+    private ModelMapper modelMapper = new ModelMapper();
+
+    @PostMapping("/match")
+    public ResponseEntity<MatchDTO> createMatch(@RequestBody MatchDTO matchDTO, @RequestAttribute("user") User user){
+        if(user.getRole().equals("organizer")){
+            Match match = modelMapper.map(matchDTO,Match.class);
+            return  new ResponseEntity<>(modelMapper.map(matchService.saveMatch(match),MatchDTO.class), HttpStatus.ACCEPTED);
+        }else{
+            throw new WrongRoleException("Your role can not create match");
+        }
+    }
+
+    @GetMapping("organization/applicants")
+    public ResponseEntity<List<ApplicantInMemberList>> getApplicantMembersInOrganization(@RequestAttribute("user") User user,@RequestAttribute("token") String token){
+        Long[] ids= organizationService.getOrganizationIdListByApplicantId(user.getProfileId()).toArray(new Long[0]);
+        return new ResponseEntity<>(profileAdapter.getApplicantListByIdList(token,ids),HttpStatus.OK);
+    }
+
+    @GetMapping("organization/recruiters")
+    public ResponseEntity<List<RecruiterInMemberList>> getRecruiterMembersInOrganization(@RequestAttribute("user") User user, @RequestAttribute("token") String token){
+        Long[] ids= organizationService.getOrganizationIdListByRecruiterId(user.getProfileId()).toArray(new Long [0]);
+        return new ResponseEntity<>(profileAdapter.getRecruiterListByIdList(token,ids),HttpStatus.OK);
+    }
+ }
