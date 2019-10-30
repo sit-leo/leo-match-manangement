@@ -6,6 +6,7 @@ public class TokenDTO {
     private String username;
     private String token;
     private Date expiresTime;
+    private long profileId;
 
     public TokenDTO() {
     }
@@ -33,4 +34,14 @@ public class TokenDTO {
     public void setExpiresTime(Date expiresTime) {
         this.expiresTime = expiresTime;
     }
+
+    public long getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(long profileId) {
+        this.profileId = profileId;
+    }
 }
+
+
