@@ -34,6 +34,9 @@ public class Match implements Serializable {
 
     private Date announceDate;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Organization organization;
+
     @CreationTimestamp
     private LocalDateTime createAt;
 
@@ -167,5 +170,13 @@ public class Match implements Serializable {
 
     public void setPopularity(int popularity) {
         this.popularity = popularity;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +23,9 @@ public class MatchService {
 
     @Autowired
     private MatchingAdapter matchingAdapter;
+
+    @Autowired
+    private OrganizationService organizationService;
 
     private final Date currentDate =  java.sql.Date.valueOf(LocalDate.now(ZoneId.of("Asia/Bangkok")));
 
@@ -39,12 +43,24 @@ public class MatchService {
         return matchRepository.getMatchesByAnnounceDateEndDateAfterAndIdIn(currentDate,matchId);
     }
 
-    public Page<Match> findAll(Pageable pagenable){
-        return  matchRepository.findAll(pagenable);
+    public Page<Match> findAll(long profileId,Pageable pagenable,String role){
+        List<Long> orgIdList = new ArrayList<>();
+        if(role.equals("applicant")) {
+            orgIdList = organizationService.getOrganizationIdListByApplicantId(profileId);
+        }else if (role.equals("recruiter")){
+            orgIdList =  organizationService.getOrganizationIdListByRecruiterId(profileId);
+        }
+        return  matchRepository.findAllByOrganizationIdIn(orgIdList,pagenable);
     }
 
-    public Page<Match> getLastChanceMatches(Pageable pageable){
-        return matchRepository.getLastChanceMatches(pageable);
+    public Page<Match> getLastChanceMatches(long profileId,Pageable pageable,String role){
+        List<Long> orgIdList = new ArrayList<>();
+        if(role.equals("applicant")){
+            orgIdList = organizationService.getOrganizationIdListByApplicantId(profileId);
+        }else if(role.equals("recruiter")){
+            orgIdList = organizationService.getOrganizationIdListByRecruiterId(profileId);
+        }
+        return matchRepository.getLastChanceMatches(pageable,orgIdList);
     }
 
     public Match updateNumberOfUser(User user,Match match){
@@ -58,5 +74,9 @@ public class MatchService {
         match.setPopularity(match.getNumOfApplicant()+match.getNumOfRecruiter());
         return matchRepository.save(match);
 
+    }
+
+    public Match saveMatch(Match match){
+        return matchRepository.save(match);
     }
 }

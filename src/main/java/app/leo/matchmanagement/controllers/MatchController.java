@@ -1,5 +1,6 @@
 package app.leo.matchmanagement.controllers;
 
+
 import app.leo.matchmanagement.dto.MatchDTO;
 import app.leo.matchmanagement.dto.User;
 import app.leo.matchmanagement.models.Match;
@@ -16,8 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Optional.of;
 
 @RestController
 public class MatchController {
@@ -68,21 +67,22 @@ public class MatchController {
     }
 
     @GetMapping("/matches/lastest")
-    public ResponseEntity<Page<Match>> getLatestMatchWithPageNumber(@RequestParam("page") int pageNumber){
+    public ResponseEntity<Page<Match>> getLatestMatchWithPageNumber(@RequestAttribute("user") User user,@RequestParam("page") int pageNumber
+                                                                    ){
         Pageable pageable = PageRequest.of(pageNumber-1,6, Sort.by("createAt").descending());
-        return new ResponseEntity<>(matchService.findAll(pageable),HttpStatus.OK);
+        return new ResponseEntity<>(matchService.findAll(user.getProfileId(),pageable,user.getRole()),HttpStatus.OK);
     }
 
     @GetMapping("/matches/last-chance")
-    public ResponseEntity<Page<Match>> getLastChanceMatchWithPageNumber(@RequestParam("page") int pageNumber){
+    public ResponseEntity<Page<Match>> getLastChanceMatchWithPageNumber(@RequestAttribute("user") User user,@RequestParam("page") int pageNumber){
         Pageable pageable = PageRequest.of(pageNumber-1,3);
-        return new ResponseEntity<>(matchService.getLastChanceMatches(pageable),HttpStatus.OK);
+        return new ResponseEntity<>(matchService.getLastChanceMatches(user.getProfileId(),pageable,user.getRole()),HttpStatus.OK);
     }
 
     @GetMapping("/matches/popular")
-    public ResponseEntity<Page<Match>> getPopularMatchesWithPageNumber(@RequestParam("page") int pageNumber){
+    public ResponseEntity<Page<Match>> getPopularMatchesWithPageNumber(@RequestAttribute("user") User user ,@RequestParam("page") int pageNumber){
         Pageable pageable = PageRequest.of(pageNumber-1, 3, Sort.by("popularity").descending());
-        return new ResponseEntity<>(matchService.findAll(pageable),HttpStatus.OK);
+        return new ResponseEntity<>(matchService.findAll(user.getProfileId(),pageable,user.getRole()),HttpStatus.OK);
     }
 
 }
