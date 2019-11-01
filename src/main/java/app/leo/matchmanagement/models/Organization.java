@@ -1,7 +1,6 @@
 package app.leo.matchmanagement.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +16,7 @@ public class Organization {
 
     private String name;
     private String description;
-    private long organizeProfileId;
+    private long organizationProfileId;
 
     @OneToMany
     @JsonIgnore
@@ -47,12 +46,12 @@ public class Organization {
         this.description = description;
     }
 
-    public long getOrganizeProfileId() {
-        return organizeProfileId;
+    public long getOrganizationProfileId() {
+        return organizationProfileId;
     }
 
-    public void setOrganizeProfileId(long organizeProfileId) {
-        this.organizeProfileId = organizeProfileId;
+    public void setOrganizationProfileId(long organizationProfileId) {
+        this.organizationProfileId = organizationProfileId;
     }
 
     public List<Match> getMatchList() {

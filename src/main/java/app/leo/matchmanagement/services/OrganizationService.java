@@ -1,6 +1,5 @@
 package app.leo.matchmanagement.services;
 
-import app.leo.matchmanagement.exceptions.WrongRoleException;
 import app.leo.matchmanagement.models.Organization;
 import app.leo.matchmanagement.models.OrganizationApplicant;
 import app.leo.matchmanagement.models.OrganizationRecruiter;
@@ -44,13 +43,13 @@ public class OrganizationService {
     }
 
     public List<Long> getApplicantIdListByOrganizationId(long organizationProfileId){
-        Organization organization = organizationRepository.findByOrganizeProfileId(organizationProfileId);
+        Organization organization = organizationRepository.findByOrganizationProfileId(organizationProfileId);
         OrganizationApplicant organizationApplicant = organizationApplicantRepository.findByOrganizationId(organization.getId());
         return organizationApplicant.getApplicantProfileIdList();
     }
 
     public List<Long> getRecruiterIdListByOrganizationId(long organizationProfileId){
-        Organization organization = organizationRepository.findByOrganizeProfileId(organizationProfileId);
+        Organization organization = organizationRepository.findByOrganizationProfileId(organizationProfileId);
         OrganizationRecruiter organizationRecruiter = organizationRecruiterRepository.findByOrganizationId(organization.getId());
         return organizationRecruiter.getRecruiterProfileId();
     }
