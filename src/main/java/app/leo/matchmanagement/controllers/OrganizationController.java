@@ -73,4 +73,14 @@ public class OrganizationController {
     public ResponseEntity<OrganizationRecruiter> updateOrganizationRecruiter(@RequestAttribute("user") User user, @RequestBody IdWrapper recruiterProfileIdList) {
         return new ResponseEntity<>(organizationService.updateOrganizationRecruiterList(user.getProfileId(),recruiterProfileIdList.getIdList()),HttpStatus.OK);
     }
+
+    @PutMapping("/match")
+    public ResponseEntity<MatchDTO> updateMatch(@RequestAttribute("user") User user, @RequestBody MatchDTO matchDTO){
+        if (user.getRole().equals("organizer")) {
+            Match match = modelMapper.map(matchDTO, Match.class);
+            return new ResponseEntity<>(modelMapper.map(matchService.saveMatch(match), MatchDTO.class), HttpStatus.ACCEPTED);
+        } else {
+            throw new WrongRoleException("Your role can not create match");
+        }
+    }
 }
