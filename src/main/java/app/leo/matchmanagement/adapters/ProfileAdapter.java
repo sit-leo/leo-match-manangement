@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class ProfileAdapter {
 
-    @Value("{profile.api.url}")
+    @Value("${profile.api.url}")
     private String profileApiUrl;
 
     public List<ApplicantInMemberList> getApplicantListByIdList(String token,Long[] ids){

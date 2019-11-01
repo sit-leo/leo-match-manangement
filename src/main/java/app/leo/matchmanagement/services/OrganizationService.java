@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -63,6 +64,21 @@ public class OrganizationService {
     }
 
     public OrganizationRecruiter createOrganizationRecruiter(OrganizationRecruiter organizationRecruiter){
+        return organizationRecruiterRepository.save(organizationRecruiter);
+    }
+
+    public OrganizationApplicant updateOrganizationApplicantList(long organizationProfileId,List<Long> applicantIdList){
+        Organization organization = organizationRepository.findByOrganizationProfileId(organizationProfileId);
+        OrganizationApplicant organizationApplicant = organizationApplicantRepository.findByOrganizationId(organization.getId());
+        organizationApplicant.setApplicantProfileIdList(applicantIdList);
+        System.out.println(organizationApplicant);
+        return organizationApplicantRepository.save(organizationApplicant);
+    }
+
+    public OrganizationRecruiter updateOrganizationRecruiterList(long organizationProfileId,List<Long> recruiterIdList){
+        Organization organization = organizationRepository.findByOrganizationProfileId(organizationProfileId);
+        OrganizationRecruiter organizationRecruiter = organizationRecruiterRepository.findByOrganizationId(organization.getId());
+        organizationRecruiter.setRecruiterProfileId(recruiterIdList);
         return organizationRecruiterRepository.save(organizationRecruiter);
     }
 }
