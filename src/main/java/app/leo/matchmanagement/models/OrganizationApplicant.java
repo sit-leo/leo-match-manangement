@@ -16,6 +16,14 @@ public class OrganizationApplicant {
     @ElementCollection
     private List<Long> applicantProfileIdList;
 
+    public OrganizationApplicant() {
+    }
+
+    public OrganizationApplicant(Organization organization, List<Long> applicantProfileIdList) {
+        this.organization = organization;
+        this.applicantProfileIdList = applicantProfileIdList;
+    }
+
     public long getId() {
         return id;
     }

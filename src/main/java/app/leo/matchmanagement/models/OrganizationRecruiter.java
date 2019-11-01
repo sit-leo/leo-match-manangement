@@ -15,6 +15,14 @@ public class OrganizationRecruiter {
     @OneToOne
     private Organization organization   ;
 
+    public OrganizationRecruiter() {
+    }
+
+    public OrganizationRecruiter(Organization organization,List<Long> recruiterProfileId) {
+        this.recruiterProfileId = recruiterProfileId;
+        this.organization = organization;
+    }
+
     public long getId() {
         return id;
     }

@@ -53,4 +53,16 @@ public class OrganizationService {
         OrganizationRecruiter organizationRecruiter = organizationRecruiterRepository.findByOrganizationId(organization.getId());
         return organizationRecruiter.getRecruiterProfileId();
     }
+
+    public Organization createOrganization(Organization organization) {
+        return organizationRepository.save(organization);
+    }
+
+    public OrganizationApplicant createOrganizationApplicant(OrganizationApplicant organizationApplicant){
+        return organizationApplicantRepository.save(organizationApplicant);
+    }
+
+    public OrganizationRecruiter createOrganizationRecruiter(OrganizationRecruiter organizationRecruiter){
+        return organizationRecruiterRepository.save(organizationRecruiter);
+    }
 }

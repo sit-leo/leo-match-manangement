@@ -1,12 +1,12 @@
 package app.leo.matchmanagement.controllers;
 
 import app.leo.matchmanagement.adapters.ProfileAdapter;
-import app.leo.matchmanagement.dto.ApplicantInMemberList;
-import app.leo.matchmanagement.dto.MatchDTO;
-import app.leo.matchmanagement.dto.RecruiterInMemberList;
-import app.leo.matchmanagement.dto.User;
+import app.leo.matchmanagement.dto.*;
 import app.leo.matchmanagement.exceptions.WrongRoleException;
 import app.leo.matchmanagement.models.Match;
+import app.leo.matchmanagement.models.Organization;
+import app.leo.matchmanagement.models.OrganizationApplicant;
+import app.leo.matchmanagement.models.OrganizationRecruiter;
 import app.leo.matchmanagement.services.MatchService;
 import app.leo.matchmanagement.services.OrganizationService;
 import org.modelmapper.ModelMapper;
@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -43,13 +44,23 @@ public class OrganizationController {
 
     @GetMapping("organization/applicants")
     public ResponseEntity<List<ApplicantInMemberList>> getApplicantMembersInOrganization(@RequestAttribute("user") User user,@RequestAttribute("token") String token){
-        Long[] ids= organizationService.getOrganizationIdListByApplicantId(user.getProfileId()).toArray(new Long[0]);
+        Long[] ids= organizationService.getApplicantIdListByOrganizationId(user.getProfileId()).toArray(new Long[0]);
         return new ResponseEntity<>(profileAdapter.getApplicantListByIdList(token,ids),HttpStatus.OK);
     }
 
     @GetMapping("organization/recruiters")
     public ResponseEntity<List<RecruiterInMemberList>> getRecruiterMembersInOrganization(@RequestAttribute("user") User user, @RequestAttribute("token") String token){
-        Long[] ids= organizationService.getOrganizationIdListByRecruiterId(user.getProfileId()).toArray(new Long [0]);
+        Long[] ids= organizationService.getRecruiterIdListByOrganizationId(user.getProfileId()).toArray(new Long [0]);
         return new ResponseEntity<>(profileAdapter.getRecruiterListByIdList(token,ids),HttpStatus.OK);
+    }
+
+    @PostMapping("/create/organization")
+    public ResponseEntity<OrganizationDTO> createOrganization(@RequestBody OrganizationDTO organization){
+        Organization createdOrg = organizationService.createOrganization(modelMapper.map(organization,Organization.class));
+        OrganizationApplicant organizationApplicant = new OrganizationApplicant(createdOrg,new ArrayList<>());
+        organizationService.createOrganizationApplicant(organizationApplicant);
+        OrganizationRecruiter organizationRecruiter = new OrganizationRecruiter(createdOrg,new ArrayList<>());
+        organizationService.createOrganizationRecruiter(organizationRecruiter);
+        return new ResponseEntity<>(modelMapper.map(createdOrg,OrganizationDTO.class),HttpStatus.ACCEPTED);
     }
  }

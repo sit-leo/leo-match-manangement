@@ -21,7 +21,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public MappedInterceptor mappedInterceptor() {
         return new MappedInterceptor(
                 new String[] {"/**", ""},
-                new String[] {"/actuator/**", "/error/**"},
+                new String[] {"/actuator/**", "/error/**", "/create/organization"},
                 tokenInterceptor());
     }
 
