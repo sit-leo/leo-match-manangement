@@ -42,6 +42,15 @@ public class OrganizationController {
         }
     }
 
+    @GetMapping("organizations/match")
+    public ResponseEntity<MatchDTO> getCurrentMatchInOrganization(
+        @RequestAttribute("user") User user,
+        @RequestAttribute("token") String token
+     ) {
+        Match match = organizationService.findTopByOrganization(user.getProfileId());
+        return new ResponseEntity<>(modelMapper.map(match, MatchDTO.class), HttpStatus.OK);
+    }
+
     @GetMapping("organization/applicants")
     public ResponseEntity<List<ApplicantInMemberList>> getApplicantMembersInOrganization(@RequestAttribute("user") User user, @RequestAttribute("token") String token) {
         Long[] ids = organizationService.getApplicantIdListByOrganizationId(user.getProfileId()).toArray(new Long[0]);
