@@ -1,17 +1,19 @@
 package app.leo.matchmanagement.services;
 
-import app.leo.matchmanagement.models.Organization;
-import app.leo.matchmanagement.models.OrganizationApplicant;
-import app.leo.matchmanagement.models.OrganizationRecruiter;
-import app.leo.matchmanagement.repositories.OrganizationApplicantRepository;
-import app.leo.matchmanagement.repositories.OrganizationRecruiterRepository;
-import app.leo.matchmanagement.repositories.OrganizationRepository;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import app.leo.matchmanagement.models.Match;
+import app.leo.matchmanagement.models.Organization;
+import app.leo.matchmanagement.models.OrganizationApplicant;
+import app.leo.matchmanagement.models.OrganizationRecruiter;
+import app.leo.matchmanagement.repositories.MatchRepository;
+import app.leo.matchmanagement.repositories.OrganizationApplicantRepository;
+import app.leo.matchmanagement.repositories.OrganizationRecruiterRepository;
+import app.leo.matchmanagement.repositories.OrganizationRepository;
 
 @Service
 public class OrganizationService {
@@ -24,6 +26,9 @@ public class OrganizationService {
 
     @Autowired
     private OrganizationRepository organizationRepository;
+
+    @Autowired
+    private MatchRepository matchRepository;
 
     public List<Long> getOrganizationIdListByApplicantId(long applicantId){
         List<OrganizationApplicant> organizations = organizationApplicantRepository.findDistinctByApplicantProfileIdListIn(applicantId);
@@ -80,5 +85,10 @@ public class OrganizationService {
         OrganizationRecruiter organizationRecruiter = organizationRecruiterRepository.findByOrganizationId(organization.getId());
         organizationRecruiter.setRecruiterProfileId(recruiterIdList);
         return organizationRecruiterRepository.save(organizationRecruiter);
+    }
+
+    public Match findTopByOrganization(long profileId) {
+        Organization organization = organizationRepository.findByOrganizationProfileId(profileId);
+        return matchRepository.findTopByOrganizationOrderByIdDesc(organization);
     }
 }
