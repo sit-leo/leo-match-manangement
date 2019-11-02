@@ -1,19 +1,22 @@
 package app.leo.matchmanagement.services;
 
-import app.leo.matchmanagement.adapters.MatchingAdapter;
-import app.leo.matchmanagement.dto.User;
-import app.leo.matchmanagement.models.Match;
-import app.leo.matchmanagement.repositories.MatchRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import app.leo.matchmanagement.adapters.MatchingAdapter;
+import app.leo.matchmanagement.dto.User;
+import app.leo.matchmanagement.models.Match;
+import app.leo.matchmanagement.models.Organization;
+import app.leo.matchmanagement.repositories.MatchRepository;
+import app.leo.matchmanagement.repositories.OrganizationRepository;
 
 @Service
 public class MatchService {
@@ -26,6 +29,9 @@ public class MatchService {
 
     @Autowired
     private OrganizationService organizationService;
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
     private final Date currentDate =  java.sql.Date.valueOf(LocalDate.now(ZoneId.of("Asia/Bangkok")));
 
@@ -76,7 +82,9 @@ public class MatchService {
 
     }
 
-    public Match saveMatch(Match match){
+    public Match saveMatch(Match match, long profileId){
+        Organization organization = organizationRepository.findByOrganizationProfileId(profileId);
+        match.setOrganization(organization);
         return matchRepository.save(match);
     }
 }
