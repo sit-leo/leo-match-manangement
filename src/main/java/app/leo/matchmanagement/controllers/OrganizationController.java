@@ -1,7 +1,28 @@
 package app.leo.matchmanagement.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import app.leo.matchmanagement.adapters.ProfileAdapter;
-import app.leo.matchmanagement.dto.*;
+import app.leo.matchmanagement.dto.ApplicantInMemberList;
+import app.leo.matchmanagement.dto.IdWrapper;
+import app.leo.matchmanagement.dto.MatchDTO;
+import app.leo.matchmanagement.dto.OrganizationDTO;
+import app.leo.matchmanagement.dto.RecruiterInMemberList;
+import app.leo.matchmanagement.dto.User;
 import app.leo.matchmanagement.exceptions.WrongRoleException;
 import app.leo.matchmanagement.models.Match;
 import app.leo.matchmanagement.models.Organization;
@@ -9,14 +30,6 @@ import app.leo.matchmanagement.models.OrganizationApplicant;
 import app.leo.matchmanagement.models.OrganizationRecruiter;
 import app.leo.matchmanagement.services.MatchService;
 import app.leo.matchmanagement.services.OrganizationService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class OrganizationController {
@@ -33,10 +46,11 @@ public class OrganizationController {
     private ModelMapper modelMapper = new ModelMapper();
 
     @PostMapping("/match")
-    public ResponseEntity<MatchDTO> createMatch(@RequestBody MatchDTO matchDTO, @RequestAttribute("user") User user) {
+    public ResponseEntity<MatchDTO> createMatch(@Valid @RequestBody MatchDTO matchDTO, @RequestAttribute("user") User user) {
         if (user.getRole().equals("organizer")) {
-            Match match = modelMapper.map(matchDTO, Match.class);
-            return new ResponseEntity<>(modelMapper.map(matchService.saveMatch(match), MatchDTO.class), HttpStatus.ACCEPTED);
+            Match mappedMatch = modelMapper.map(matchDTO, Match.class);
+            Match savedMatch = matchService.saveMatch(mappedMatch, user.getProfileId());
+            return new ResponseEntity<>(modelMapper.map(savedMatch, MatchDTO.class), HttpStatus.ACCEPTED);
         } else {
             throw new WrongRoleException("Your role can not create match");
         }
@@ -84,10 +98,11 @@ public class OrganizationController {
     }
 
     @PutMapping("/match")
-    public ResponseEntity<MatchDTO> updateMatch(@RequestAttribute("user") User user, @RequestBody MatchDTO matchDTO){
+    public ResponseEntity<MatchDTO> updateMatch(@RequestAttribute("user") User user,@Valid @RequestBody MatchDTO matchDTO){
         if (user.getRole().equals("organizer")) {
             Match match = modelMapper.map(matchDTO, Match.class);
-            return new ResponseEntity<>(modelMapper.map(matchService.saveMatch(match), MatchDTO.class), HttpStatus.ACCEPTED);
+            Match savedMatch = matchService.saveMatch(match, user.getProfileId());
+            return new ResponseEntity<>(modelMapper.map(savedMatch, MatchDTO.class), HttpStatus.ACCEPTED);
         } else {
             throw new WrongRoleException("Your role can not create match");
         }
