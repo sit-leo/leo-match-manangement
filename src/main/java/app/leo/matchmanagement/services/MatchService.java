@@ -83,8 +83,22 @@ public class MatchService {
     }
 
     public Match saveMatch(Match match, long profileId){
-        Organization organization = organizationRepository.findByOrganizationProfileId(profileId);
+        Organization organization = getOrganization(profileId);
         match.setOrganization(organization);
         return matchRepository.save(match);
+    }
+
+    public List<Match> getCurrentMatchByOrganizationId(long profileId) {
+        Organization organization = getOrganization(profileId);
+        return matchRepository.findByStartJoiningDateBeforeAndAnnouceDateAfterAndOrganizationId(currentDate, organization.getId());
+    }
+
+    public List<Match> getEndedMatchByOrganizationId(long profileId) {
+        Organization organization = getOrganization(profileId);
+        return matchRepository.findEndedMatchesByAnnounceDateEndDateAfterAndOrganizationId(currentDate, organization.getId());
+    }
+
+    private Organization getOrganization(long profileId) {
+        return organizationRepository.findByOrganizationProfileId(profileId);
     }
 }

@@ -1,10 +1,9 @@
 package app.leo.matchmanagement.controllers;
 
 
-import app.leo.matchmanagement.dto.MatchDTO;
-import app.leo.matchmanagement.dto.User;
-import app.leo.matchmanagement.models.Match;
-import app.leo.matchmanagement.services.MatchService;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,10 +12,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
+import app.leo.matchmanagement.dto.MatchDTO;
+import app.leo.matchmanagement.dto.User;
+import app.leo.matchmanagement.models.Match;
+import app.leo.matchmanagement.services.MatchService;
 
 @RestController
 public class MatchController {
@@ -57,13 +63,25 @@ public class MatchController {
             @RequestAttribute("token") String token
     ){
         if (status.equals("current")) {
+            if (isOrganizer(user)) {
+                List<Match> matches = matchService.getCurrentMatchByOrganizationId(user.getProfileId());
+                return new ResponseEntity<>(mapMatchListToMatchResponseList(matches),HttpStatus.OK);
+            }
             List<Match> matches =matchService.getCurrentMatchByUserId(token);
             return new ResponseEntity<>(mapMatchListToMatchResponseList(matches),HttpStatus.OK);
         } else if(status.equals("ended")){
+            if (isOrganizer(user)) {
+                List<Match> matches = matchService.getEndedMatchByOrganizationId(user.getProfileId());
+                return new ResponseEntity<>(mapMatchListToMatchResponseList(matches),HttpStatus.OK);
+            }
             List<Match> matches = matchService.getEndedMatchByUserId(token);
             return new ResponseEntity<>(mapMatchListToMatchResponseList(matches),HttpStatus.OK);
         }
         return  new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+    }
+
+    private boolean isOrganizer(@RequestAttribute("user") User user) {
+        return user.getRole().equalsIgnoreCase("organizer");
     }
 
     @GetMapping("/matches/lastest")
