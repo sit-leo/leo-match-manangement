@@ -6,7 +6,7 @@ public class RecruiterInMemberList {
     private String name;
     private String location;
     private String email;
-    private String telno;
+    private String telNo;
     private String website;
 
     public long getId() {
@@ -41,12 +41,12 @@ public class RecruiterInMemberList {
         this.email = email;
     }
 
-    public String getTelno() {
-        return telno;
+    public String getTelNo() {
+        return telNo;
     }
 
-    public void setTelno(String telno) {
-        this.telno = telno;
+    public void setTelNo(String telNo) {
+        this.telNo = telNo;
     }
 
     public String getWebsite() {
