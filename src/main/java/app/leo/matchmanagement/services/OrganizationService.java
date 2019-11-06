@@ -49,13 +49,13 @@ public class OrganizationService {
     }
 
     public List<Long> getApplicantIdListByOrganizationId(long organizationProfileId){
-        Organization organization = organizationRepository.findByOrganizationProfileId(organizationProfileId);
+        Organization organization = getByOrganizationProfileId(organizationProfileId);
         OrganizationApplicant organizationApplicant = organizationApplicantRepository.findByOrganizationId(organization.getId());
         return organizationApplicant.getApplicantProfileIdList();
     }
 
     public List<Long> getRecruiterIdListByOrganizationId(long organizationProfileId){
-        Organization organization = organizationRepository.findByOrganizationProfileId(organizationProfileId);
+        Organization organization = getByOrganizationProfileId(organizationProfileId);
         OrganizationRecruiter organizationRecruiter = organizationRecruiterRepository.findByOrganizationId(organization.getId());
         return organizationRecruiter.getRecruiterProfileId();
     }
@@ -73,7 +73,7 @@ public class OrganizationService {
     }
 
     public OrganizationApplicant updateOrganizationApplicantList(long organizationProfileId,List<Long> applicantIdList){
-        Organization organization = organizationRepository.findByOrganizationProfileId(organizationProfileId);
+        Organization organization = getByOrganizationProfileId(organizationProfileId);
         OrganizationApplicant organizationApplicant = organizationApplicantRepository.findByOrganizationId(organization.getId());
         organizationApplicant.setApplicantProfileIdList(applicantIdList);
         System.out.println(organizationApplicant);
@@ -81,14 +81,23 @@ public class OrganizationService {
     }
 
     public OrganizationRecruiter updateOrganizationRecruiterList(long organizationProfileId,List<Long> recruiterIdList){
-        Organization organization = organizationRepository.findByOrganizationProfileId(organizationProfileId);
+        Organization organization = getByOrganizationProfileId(organizationProfileId);
         OrganizationRecruiter organizationRecruiter = organizationRecruiterRepository.findByOrganizationId(organization.getId());
         organizationRecruiter.setRecruiterProfileId(recruiterIdList);
         return organizationRecruiterRepository.save(organizationRecruiter);
     }
 
     public Match findTopByOrganization(long profileId) {
-        Organization organization = organizationRepository.findByOrganizationProfileId(profileId);
+        Organization organization = getByOrganizationProfileId(profileId);
         return matchRepository.findTopByOrganizationOrderByIdDesc(organization);
+    }
+
+    public Long countMatchesByOrganizer(long profileId) {
+        Organization organization = getByOrganizationProfileId(profileId);
+        return matchRepository.countByOrganizationId(organization.getId());
+    }
+
+    private Organization getByOrganizationProfileId(long profileId) {
+        return organizationRepository.findByOrganizationProfileId(profileId);
     }
 }

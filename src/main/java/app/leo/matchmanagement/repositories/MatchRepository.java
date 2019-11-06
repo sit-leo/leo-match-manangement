@@ -43,4 +43,5 @@ public interface MatchRepository extends JpaRepository<Match,Long> {
     @Query(value = "select * from matches m where m.announce_date <= ?1 and m.organization_id = ?2",nativeQuery = true)
     List<Match> findEndedMatchesByAnnounceDateEndDateAfterAndOrganizationId(Date currentDate, Long profileId);
 
+	  long countByOrganizationId(long id);
 }

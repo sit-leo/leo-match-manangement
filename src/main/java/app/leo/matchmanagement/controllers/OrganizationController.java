@@ -71,6 +71,11 @@ public class OrganizationController {
         Long[] ids = organizationService.getRecruiterIdListByOrganizationId(user.getProfileId()).toArray(new Long[0]);
         return new ResponseEntity<>(profileAdapter.getRecruiterListByIdList(token, ids), HttpStatus.OK);
     }
+    @GetMapping("organization/matches/count")
+    public ResponseEntity<Long> countMatchesByOrganizer(@RequestAttribute("user") User user, @RequestAttribute("token") String token) {
+        Long numOfMatches = organizationService.countMatchesByOrganizer(user.getProfileId());
+        return new ResponseEntity<>(numOfMatches, HttpStatus.OK);
+    }
 
     @PostMapping("/create/organization")
     public ResponseEntity<OrganizationDTO> createOrganization(@RequestBody OrganizationDTO organization) {
