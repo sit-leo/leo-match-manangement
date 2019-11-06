@@ -9,12 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import app.leo.matchmanagement.adapters.ProfileAdapter;
 import app.leo.matchmanagement.dto.ApplicantInMemberList;
@@ -106,5 +101,17 @@ public class OrganizationController {
         } else {
             throw new WrongRoleException("Your role can not create match");
         }
+    }
+
+    @GetMapping("/organization/applicants/{orgProfileId}")
+    public ResponseEntity<IdWrapper> getApplicantIdListByOrganizationProfileId(@PathVariable long orgProfileId){
+        IdWrapper response = new IdWrapper(organizationService.getApplicantIdListByOrganizationId(orgProfileId));
+         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @GetMapping("/organization/recruiters/{orgProfileId}")
+    public ResponseEntity<IdWrapper> getRecruiterIdListByOrganizationProfileId(@PathVariable long orgProfileId) {
+        IdWrapper response = new IdWrapper(organizationService.getRecruiterIdListByOrganizationId(orgProfileId));
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 }
