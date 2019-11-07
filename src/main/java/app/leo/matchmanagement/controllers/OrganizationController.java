@@ -9,7 +9,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import app.leo.matchmanagement.adapters.ProfileAdapter;
 import app.leo.matchmanagement.dto.ApplicantInMemberList;
@@ -28,6 +34,7 @@ import app.leo.matchmanagement.services.OrganizationService;
 
 @RestController
 public class OrganizationController {
+    private static final List<?> EMPTY_PARTICIPANTS = new ArrayList<>();
 
     @Autowired
     private MatchService matchService;
@@ -63,13 +70,27 @@ public class OrganizationController {
     @GetMapping("organization/applicants")
     public ResponseEntity<List<ApplicantInMemberList>> getApplicantMembersInOrganization(@RequestAttribute("user") User user, @RequestAttribute("token") String token) {
         Long[] ids = organizationService.getApplicantIdListByOrganizationId(user.getProfileId()).toArray(new Long[0]);
-        return new ResponseEntity<>(profileAdapter.getApplicantListByIdList(token, ids), HttpStatus.OK);
+
+        if (ids.length == 0) {
+            List<ApplicantInMemberList> empty = (List<ApplicantInMemberList>) EMPTY_PARTICIPANTS;
+            return new ResponseEntity<>(empty, HttpStatus.OK);
+        }
+
+        List<ApplicantInMemberList> applicants = profileAdapter.getApplicantListByIdList(token, ids);
+        return new ResponseEntity<>(applicants, HttpStatus.OK);
     }
 
     @GetMapping("organization/recruiters")
     public ResponseEntity<List<RecruiterInMemberList>> getRecruiterMembersInOrganization(@RequestAttribute("user") User user, @RequestAttribute("token") String token) {
         Long[] ids = organizationService.getRecruiterIdListByOrganizationId(user.getProfileId()).toArray(new Long[0]);
-        return new ResponseEntity<>(profileAdapter.getRecruiterListByIdList(token, ids), HttpStatus.OK);
+
+        if (ids.length == 0) {
+            List<RecruiterInMemberList> empty = (List<RecruiterInMemberList>) EMPTY_PARTICIPANTS;
+            return new ResponseEntity<>(empty, HttpStatus.OK);
+        }
+
+        List<RecruiterInMemberList> recruiters = profileAdapter.getRecruiterListByIdList(token, ids);
+        return new ResponseEntity<>(recruiters, HttpStatus.OK);
     }
     @GetMapping("organization/matches/count")
     public ResponseEntity<Long> countMatchesByOrganizer(@RequestAttribute("user") User user, @RequestAttribute("token") String token) {
