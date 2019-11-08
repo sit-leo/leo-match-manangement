@@ -10,7 +10,7 @@ public class OrganizationRecruiter {
     @GeneratedValue
     private long id;
     @ElementCollection
-    private List<Long> recruiterProfileId;
+    private List<Long> recruiterProfileIdList;
 
     @OneToOne
     private Organization organization   ;
@@ -18,8 +18,8 @@ public class OrganizationRecruiter {
     public OrganizationRecruiter() {
     }
 
-    public OrganizationRecruiter(Organization organization,List<Long> recruiterProfileId) {
-        this.recruiterProfileId = recruiterProfileId;
+    public OrganizationRecruiter(Organization organization,List<Long> recruiterProfileIdList) {
+        this.recruiterProfileIdList = recruiterProfileIdList;
         this.organization = organization;
     }
 
@@ -31,12 +31,12 @@ public class OrganizationRecruiter {
         this.id = id;
     }
 
-    public List<Long> getRecruiterProfileId() {
-        return recruiterProfileId;
+    public List<Long> getRecruiterProfileIdList() {
+        return recruiterProfileIdList;
     }
 
-    public void setRecruiterProfileId(List<Long> recruiterProfileId) {
-        this.recruiterProfileId = recruiterProfileId;
+    public void setRecruiterProfileIdList(List<Long> recruiterProfileIdList) {
+        this.recruiterProfileIdList = recruiterProfileIdList;
     }
 
     public Organization getOrganization() {

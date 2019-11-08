@@ -113,9 +113,9 @@ public class OrganizationController {
       return new ResponseEntity<>(organizationService.addOrganizationApplicantList(user.getProfileId(),applicantProfileIdList.getIdList()),HttpStatus.OK);
     }
 
-    @PutMapping("/organization/recruiters")
+    @PostMapping("/organization/recruiters")
     public ResponseEntity<OrganizationRecruiter> updateOrganizationRecruiter(@RequestAttribute("user") User user, @RequestBody IdWrapper recruiterProfileIdList) {
-        return new ResponseEntity<>(organizationService.updateOrganizationRecruiterList(user.getProfileId(),recruiterProfileIdList.getIdList()),HttpStatus.OK);
+        return new ResponseEntity<>(organizationService.addOrganizationRecruiterList(user.getProfileId(),recruiterProfileIdList.getIdList()),HttpStatus.OK);
     }
 
     @PutMapping("/match")

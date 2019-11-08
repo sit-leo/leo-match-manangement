@@ -3,7 +3,6 @@ package app.leo.matchmanagement.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,7 +58,7 @@ public class OrganizationService {
     public List<Long> getRecruiterIdListByOrganizationId(long organizationProfileId){
         Organization organization = getByOrganizationProfileId(organizationProfileId);
         OrganizationRecruiter organizationRecruiter = organizationRecruiterRepository.findByOrganizationId(organization.getId());
-        return organizationRecruiter.getRecruiterProfileId();
+        return organizationRecruiter.getRecruiterProfileIdList();
     }
 
     public Organization createOrganization(Organization organization) {
@@ -80,13 +79,6 @@ public class OrganizationService {
         organizationApplicant.setApplicantProfileIdList(applicantIdList);
         System.out.println(organizationApplicant);
         return organizationApplicantRepository.save(organizationApplicant);
-    }
-
-    public OrganizationRecruiter updateOrganizationRecruiterList(long organizationProfileId,List<Long> recruiterIdList){
-        Organization organization = getByOrganizationProfileId(organizationProfileId);
-        OrganizationRecruiter organizationRecruiter = organizationRecruiterRepository.findByOrganizationId(organization.getId());
-        organizationRecruiter.setRecruiterProfileId(recruiterIdList);
-        return organizationRecruiterRepository.save(organizationRecruiter);
     }
 
     public Match findTopByOrganization(long profileId) {
@@ -110,5 +102,14 @@ public class OrganizationService {
         newApplicantList.addAll(idList);
         organizationApplicant.setApplicantProfileIdList(newApplicantList.stream().sorted().collect(Collectors.toList()));
         return organizationApplicantRepository.save(organizationApplicant);
+    }
+
+    public OrganizationRecruiter addOrganizationRecruiterList(long organizationProfileId, List<Long> idList) {
+        Organization organization = getByOrganizationProfileId(organizationProfileId);
+        OrganizationRecruiter organizationRecruiter = organizationRecruiterRepository.findByOrganizationId(organization.getId());
+        List<Long> newRecruiterIdList = organizationRecruiter.getRecruiterProfileIdList();
+        newRecruiterIdList.addAll(idList);
+        organizationRecruiter.setRecruiterProfileIdList(newRecruiterIdList.stream().sorted().collect(Collectors.toList()));
+        return organizationRecruiterRepository.save(organizationRecruiter);
     }
 }
