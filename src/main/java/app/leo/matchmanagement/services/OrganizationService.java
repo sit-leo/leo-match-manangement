@@ -2,6 +2,8 @@ package app.leo.matchmanagement.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,5 +101,14 @@ public class OrganizationService {
 
     private Organization getByOrganizationProfileId(long profileId) {
         return organizationRepository.findByOrganizationProfileId(profileId);
+    }
+
+    public OrganizationApplicant addOrganizationApplicantList(long organizationProfileId, List<Long> idList) {
+        Organization organization = getByOrganizationProfileId(organizationProfileId);
+        OrganizationApplicant organizationApplicant = organizationApplicantRepository.findByOrganizationId(organization.getId());
+        List<Long> newApplicantList = organizationApplicant.getApplicantProfileIdList();
+        newApplicantList.addAll(idList);
+        organizationApplicant.setApplicantProfileIdList(newApplicantList.stream().sorted().collect(Collectors.toList()));
+        return organizationApplicantRepository.save(organizationApplicant);
     }
 }

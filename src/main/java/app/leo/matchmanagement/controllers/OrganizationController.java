@@ -108,9 +108,9 @@ public class OrganizationController {
         return new ResponseEntity<>(modelMapper.map(createdOrg, OrganizationDTO.class), HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/organization/applicants")
-    public ResponseEntity<OrganizationApplicant> updateOrganizationApplicant(@RequestAttribute("user") User user, @RequestBody IdWrapper applicantProfileIdList) {
-      return new ResponseEntity<>(organizationService.updateOrganizationApplicantList(user.getProfileId(),applicantProfileIdList.getIdList()),HttpStatus.OK);
+    @PostMapping("/organization/applicants")
+    public ResponseEntity<OrganizationApplicant> addApplicantToOrganizationApplicant(@RequestAttribute("user") User user, @RequestBody IdWrapper applicantProfileIdList) {
+      return new ResponseEntity<>(organizationService.addOrganizationApplicantList(user.getProfileId(),applicantProfileIdList.getIdList()),HttpStatus.OK);
     }
 
     @PutMapping("/organization/recruiters")
