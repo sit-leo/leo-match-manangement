@@ -100,16 +100,19 @@ public class OrganizationService {
         OrganizationApplicant organizationApplicant = organizationApplicantRepository.findByOrganizationId(organization.getId());
         List<Long> newApplicantList = organizationApplicant.getApplicantProfileIdList();
         newApplicantList.addAll(idList);
-        organizationApplicant.setApplicantProfileIdList(newApplicantList.stream().sorted().collect(Collectors.toList()));
+        organizationApplicant.setApplicantProfileIdList(sortList(newApplicantList));
         return organizationApplicantRepository.save(organizationApplicant);
     }
 
+    private List<Long> sortList(List<Long> list){
+        return list.stream().sorted().collect(Collectors.toList());
+    }
     public OrganizationRecruiter addOrganizationRecruiterList(long organizationProfileId, List<Long> idList) {
         Organization organization = getByOrganizationProfileId(organizationProfileId);
         OrganizationRecruiter organizationRecruiter = organizationRecruiterRepository.findByOrganizationId(organization.getId());
         List<Long> newRecruiterIdList = organizationRecruiter.getRecruiterProfileIdList();
         newRecruiterIdList.addAll(idList);
-        organizationRecruiter.setRecruiterProfileIdList(newRecruiterIdList.stream().sorted().collect(Collectors.toList()));
+        organizationRecruiter.setRecruiterProfileIdList(sortList(newRecruiterIdList));
         return organizationRecruiterRepository.save(organizationRecruiter);
     }
 }
