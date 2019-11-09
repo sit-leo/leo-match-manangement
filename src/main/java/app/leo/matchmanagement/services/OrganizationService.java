@@ -41,7 +41,7 @@ public class OrganizationService {
     }
 
     public List<Long> getOrganizationIdListByRecruiterId(long recruiterId){
-        List<OrganizationRecruiter> organizations = organizationRecruiterRepository.findDistinctByRecruiterProfileIdIn(recruiterId);
+        List<OrganizationRecruiter> organizations = organizationRecruiterRepository.findDistinctByRecruiterProfileIdListIn(recruiterId);
         List<Long> result = new ArrayList<>();
         for(OrganizationRecruiter organizationRecruiter:organizations){
             result.add(organizationRecruiter.getOrganization().getId());

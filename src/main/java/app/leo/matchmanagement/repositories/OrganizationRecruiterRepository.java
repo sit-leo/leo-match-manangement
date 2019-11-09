@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface OrganizationRecruiterRepository extends JpaRepository<OrganizationRecruiter,Long> {
 
-    List<OrganizationRecruiter> findDistinctByRecruiterProfileIdIn(long recruiterId);
+    List<OrganizationRecruiter> findDistinctByRecruiterProfileIdListIn(long recruiterId);
 
     OrganizationRecruiter findByOrganizationId(long organizationId);
 }
