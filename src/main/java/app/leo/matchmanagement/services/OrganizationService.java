@@ -40,6 +40,15 @@ public class OrganizationService {
         return result;
     }
 
+    public List<Long> getOrganizationProfileIdListByApplicantId(long applicantId){
+        List<OrganizationApplicant> organizations = organizationApplicantRepository.findDistinctByApplicantProfileIdListIn(applicantId);
+        List<Long> result = new ArrayList<>();
+        for(OrganizationApplicant organizationApplicant:organizations){
+            result.add(organizationApplicant.getOrganization().getOrganizationProfileId());
+        }
+        return result;
+    }
+
     public List<Long> getOrganizationIdListByRecruiterId(long recruiterId){
         List<OrganizationRecruiter> organizations = organizationRecruiterRepository.findDistinctByRecruiterProfileIdListIn(recruiterId);
         List<Long> result = new ArrayList<>();
@@ -49,6 +58,14 @@ public class OrganizationService {
         return result;
     }
 
+    public List<Long> getOrganizationProfileIdListByRecruiterId(long recruiterId){
+        List<OrganizationRecruiter> organizations = organizationRecruiterRepository.findDistinctByRecruiterProfileIdListIn(recruiterId);
+        List<Long> result = new ArrayList<>();
+        for(OrganizationRecruiter organizationRecruiter:organizations){
+            result.add(organizationRecruiter.getOrganization().getOrganizationProfileId());
+        }
+        return result;
+    }
     public List<Long> getApplicantIdListByOrganizationId(long organizationProfileId){
         Organization organization = getByOrganizationProfileId(organizationProfileId);
         OrganizationApplicant organizationApplicant = organizationApplicantRepository.findByOrganizationId(organization.getId());

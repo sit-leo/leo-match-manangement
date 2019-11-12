@@ -46,10 +46,13 @@ public class OrganizationController {
     private OrganizationService organizationService;
 
     private ModelMapper modelMapper = new ModelMapper();
+    private final String APPLICANT_ROLE = "applicant";
+    private final String RECRUITER_ROLE = "recruiter";
+    private final String ORGANIZER_ROLE = "organizer";
 
     @PostMapping("/match")
     public ResponseEntity<MatchDTO> createMatch(@Valid @RequestBody MatchDTO matchDTO, @RequestAttribute("user") User user) {
-        if (user.getRole().equals("organizer")) {
+        if (user.getRole().equals(ORGANIZER_ROLE)) {
             Match mappedMatch = modelMapper.map(matchDTO, Match.class);
             Match savedMatch = matchService.saveMatch(mappedMatch, user.getProfileId());
             return new ResponseEntity<>(modelMapper.map(savedMatch, MatchDTO.class), HttpStatus.ACCEPTED);
@@ -60,9 +63,9 @@ public class OrganizationController {
 
     @GetMapping("organizations/match")
     public ResponseEntity<MatchDTO> getCurrentMatchInOrganization(
-        @RequestAttribute("user") User user,
-        @RequestAttribute("token") String token
-     ) {
+            @RequestAttribute("user") User user,
+            @RequestAttribute("token") String token
+    ) {
         Match match = organizationService.findTopByOrganization(user.getProfileId());
         return new ResponseEntity<>(modelMapper.map(match, MatchDTO.class), HttpStatus.OK);
     }
@@ -92,6 +95,7 @@ public class OrganizationController {
         List<RecruiterInMemberList> recruiters = profileAdapter.getRecruiterListByIdList(token, ids);
         return new ResponseEntity<>(recruiters, HttpStatus.OK);
     }
+
     @GetMapping("organization/matches/count")
     public ResponseEntity<Long> countMatchesByOrganizer(@RequestAttribute("user") User user, @RequestAttribute("token") String token) {
         Long numOfMatches = organizationService.countMatchesByOrganizer(user.getProfileId());
@@ -110,16 +114,16 @@ public class OrganizationController {
 
     @PostMapping("/organization/applicants")
     public ResponseEntity<OrganizationApplicant> addApplicantToOrganizationApplicant(@RequestAttribute("user") User user, @RequestBody IdWrapper applicantProfileIdList) {
-      return new ResponseEntity<>(organizationService.addOrganizationApplicantList(user.getProfileId(),applicantProfileIdList.getIdList()),HttpStatus.OK);
+        return new ResponseEntity<>(organizationService.addOrganizationApplicantList(user.getProfileId(), applicantProfileIdList.getIdList()), HttpStatus.OK);
     }
 
     @PostMapping("/organization/recruiters")
     public ResponseEntity<OrganizationRecruiter> updateOrganizationRecruiter(@RequestAttribute("user") User user, @RequestBody IdWrapper recruiterProfileIdList) {
-        return new ResponseEntity<>(organizationService.addOrganizationRecruiterList(user.getProfileId(),recruiterProfileIdList.getIdList()),HttpStatus.OK);
+        return new ResponseEntity<>(organizationService.addOrganizationRecruiterList(user.getProfileId(), recruiterProfileIdList.getIdList()), HttpStatus.OK);
     }
 
     @PutMapping("/match")
-    public ResponseEntity<MatchDTO> updateMatch(@RequestAttribute("user") User user,@Valid @RequestBody MatchDTO matchDTO){
+    public ResponseEntity<MatchDTO> updateMatch(@RequestAttribute("user") User user, @Valid @RequestBody MatchDTO matchDTO) {
         if (user.getRole().equals("organizer")) {
             Match match = modelMapper.map(matchDTO, Match.class);
             Match savedMatch = matchService.saveMatch(match, user.getProfileId());
@@ -130,14 +134,31 @@ public class OrganizationController {
     }
 
     @GetMapping("/organization/applicants/{orgProfileId}")
-    public ResponseEntity<IdWrapper> getApplicantIdListByOrganizationProfileId(@PathVariable long orgProfileId){
+    public ResponseEntity<IdWrapper> getApplicantIdListByOrganizationProfileId(@PathVariable long orgProfileId) {
         IdWrapper response = new IdWrapper(organizationService.getApplicantIdListByOrganizationId(orgProfileId));
-         return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/organization/recruiters/{orgProfileId}")
     public ResponseEntity<IdWrapper> getRecruiterIdListByOrganizationProfileId(@PathVariable long orgProfileId) {
         IdWrapper response = new IdWrapper(organizationService.getRecruiterIdListByOrganizationId(orgProfileId));
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{profileId}/organizations")
+    public ResponseEntity<IdWrapper> getAllOrganizaitonProfileIdOfUser(@RequestAttribute("user") User user, @PathVariable long profileId) {
+        String role = user.getRole();
+        List<Long> idList;
+        switch (role) {
+            case APPLICANT_ROLE:
+                idList = organizationService.getOrganizationProfileIdListByApplicantId(profileId);
+                break;
+            case RECRUITER_ROLE:
+                idList = organizationService.getOrganizationProfileIdListByRecruiterId(profileId);
+                break;
+            default:
+                throw new WrongRoleException("You belong to one organization");
+        }
+        return new ResponseEntity<>(new IdWrapper(idList), HttpStatus.OK);
     }
 }
