@@ -28,6 +28,12 @@ public class MatchDTO  {
 	@NotNull
 	private Date announceDate;
 
+	private int numOfRecruiter;
+
+	private int numOfApplicant;
+
+	private int popularity;
+
 	public Long getId() {
 		return id;
 	}
@@ -90,5 +96,29 @@ public class MatchDTO  {
 
 	public void setAnnounceDate(Date announceDate) {
 		this.announceDate = announceDate;
+	}
+
+	public int getNumOfRecruiter() {
+		return numOfRecruiter;
+	}
+
+	public void setNumOfRecruiter(int numOfRecruiter) {
+		this.numOfRecruiter = numOfRecruiter;
+	}
+
+	public int getNumOfApplicant() {
+		return numOfApplicant;
+	}
+
+	public void setNumOfApplicant(int numOfApplicant) {
+		this.numOfApplicant = numOfApplicant;
+	}
+
+	public int getPopularity() {
+		return popularity;
+	}
+
+	public void setPopularity(int popularity) {
+		this.popularity = popularity;
 	}
 }
