@@ -79,6 +79,8 @@ public class OrganizationService {
     }
 
     public Organization createOrganization(Organization organization) {
+        organization.setNumOfApplicants(0);
+        organization.setNumOfRecruiters(0);
         return organizationRepository.save(organization);
     }
 
