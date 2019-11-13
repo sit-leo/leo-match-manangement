@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import app.leo.matchmanagement.dto.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,12 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.leo.matchmanagement.adapters.ProfileAdapter;
-import app.leo.matchmanagement.dto.ApplicantInMemberList;
-import app.leo.matchmanagement.dto.IdWrapper;
-import app.leo.matchmanagement.dto.MatchDTO;
-import app.leo.matchmanagement.dto.OrganizationDTO;
-import app.leo.matchmanagement.dto.RecruiterInMemberList;
-import app.leo.matchmanagement.dto.User;
 import app.leo.matchmanagement.exceptions.WrongRoleException;
 import app.leo.matchmanagement.models.Match;
 import app.leo.matchmanagement.models.Organization;
@@ -146,9 +141,9 @@ public class OrganizationController {
     }
 
     @GetMapping("/user/{profileId}/organizations")
-    public ResponseEntity<IdWrapper> getAllOrganizaitonProfileIdOfUser(@RequestAttribute("user") User user, @PathVariable long profileId) {
+    public ResponseEntity<OrgIdWrapper> getAllOrganizaitonProfileIdOfUser(@RequestAttribute("user") User user, @PathVariable long profileId) {
         String role = user.getRole();
-        List<Long> idList;
+        List<IdWithNumberOfApplicantAndRecruiter> idList;
         switch (role) {
             case APPLICANT_ROLE:
                 idList = organizationService.getOrganizationProfileIdListByApplicantId(profileId);
@@ -159,6 +154,6 @@ public class OrganizationController {
             default:
                 throw new WrongRoleException("You belong to one organization");
         }
-        return new ResponseEntity<>(new IdWrapper(idList), HttpStatus.OK);
+        return new ResponseEntity<>(new OrgIdWrapper(idList), HttpStatus.OK);
     }
 }
