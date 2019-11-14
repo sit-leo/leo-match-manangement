@@ -19,6 +19,7 @@ import app.leo.matchmanagement.models.Match;
 import app.leo.matchmanagement.models.Organization;
 import app.leo.matchmanagement.repositories.MatchRepository;
 import app.leo.matchmanagement.repositories.OrganizationRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MatchService {
@@ -117,6 +118,7 @@ public class MatchService {
         return organizationRepository.findByOrganizationProfileId(profileId);
     }
 
+    @Transactional
     public void deleteMatchById(long matchId) {
         matchRepository.deleteById(matchId);
     }
