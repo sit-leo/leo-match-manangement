@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import app.leo.matchmanagement.dto.*;
+import app.leo.matchmanagement.exceptions.MatchIsNotEmptyException;
+import app.leo.matchmanagement.exceptions.WrongOrganizationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -119,7 +121,14 @@ public class OrganizationController {
 
     @PutMapping("/match")
     public ResponseEntity<MatchDTO> updateMatch(@RequestAttribute("user") User user, @Valid @RequestBody MatchDTO matchDTO) {
+        Match previousMatch = matchService.getMatchByMatchId(matchDTO.getId());
         if (user.getRole().equals("organizer")) {
+            if (previousMatch.getOrganization().getOrganizationProfileId() != user.getProfileId()){
+                throw new WrongOrganizationException("This is not your match");
+            }
+            if(previousMatch.getNumOfApplicant()!=0 || previousMatch.getNumOfRecruiter() !=0){
+                throw new MatchIsNotEmptyException("Match is not empty. You can not edit the detail of match");
+            }
             Match match = modelMapper.map(matchDTO, Match.class);
             Match savedMatch = matchService.saveMatch(match, user.getProfileId());
             return new ResponseEntity<>(modelMapper.map(savedMatch, MatchDTO.class), HttpStatus.ACCEPTED);
