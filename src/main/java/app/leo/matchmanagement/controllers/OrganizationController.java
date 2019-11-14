@@ -12,13 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import app.leo.matchmanagement.adapters.ProfileAdapter;
 import app.leo.matchmanagement.exceptions.WrongRoleException;
@@ -119,16 +113,24 @@ public class OrganizationController {
         return new ResponseEntity<>(organizationService.addOrganizationRecruiterList(user.getProfileId(), recruiterProfileIdList.getIdList()), HttpStatus.OK);
     }
 
+    private void checkIfMatchIsEmpty(Match match){
+        if(match.getNumOfApplicant()!=0 || match.getNumOfRecruiter() !=0){
+            throw new MatchIsNotEmptyException("Match is not empty. You can not edit the detail of match");
+        }
+    }
+
+    private void IsOwnerOfTheMatch(Match match,User user){
+        if (match.getOrganization().getOrganizationProfileId() != user.getProfileId()){
+            throw new WrongOrganizationException("This is not your match");
+        }
+    }
+
     @PutMapping("/match")
     public ResponseEntity<MatchDTO> updateMatch(@RequestAttribute("user") User user, @Valid @RequestBody MatchDTO matchDTO) {
         Match previousMatch = matchService.getMatchByMatchId(matchDTO.getId());
         if (user.getRole().equals("organizer")) {
-            if (previousMatch.getOrganization().getOrganizationProfileId() != user.getProfileId()){
-                throw new WrongOrganizationException("This is not your match");
-            }
-            if(previousMatch.getNumOfApplicant()!=0 || previousMatch.getNumOfRecruiter() !=0){
-                throw new MatchIsNotEmptyException("Match is not empty. You can not edit the detail of match");
-            }
+            IsOwnerOfTheMatch(previousMatch,user);
+            checkIfMatchIsEmpty(previousMatch);
             Match match = modelMapper.map(matchDTO, Match.class);
             Match savedMatch = matchService.saveMatch(match, user.getProfileId());
             return new ResponseEntity<>(modelMapper.map(savedMatch, MatchDTO.class), HttpStatus.ACCEPTED);
@@ -164,5 +166,17 @@ public class OrganizationController {
                 throw new WrongRoleException("You belong to one organization");
         }
         return new ResponseEntity<>(new OrgIdWrapper(idList), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/match/{matchId}")
+    public ResponseEntity<String> deleteMatchByMatchId(@RequestAttribute("user") User user,@PathVariable long matchId){
+        Match match = matchService.getMatchByMatchId(matchId);
+        checkIfMatchIsEmpty(match);
+        if(user.getRole().equals(ORGANIZER_ROLE)) {
+            IsOwnerOfTheMatch(match,user);
+            matchService.deleteMatchById(matchId);
+            return new ResponseEntity<>("Success", HttpStatus.OK);
+        }
+        throw new WrongRoleException("Your role can not delete match");
     }
 }

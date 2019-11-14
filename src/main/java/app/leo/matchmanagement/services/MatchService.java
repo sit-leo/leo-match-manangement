@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import app.leo.matchmanagement.dto.MatchDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import app.leo.matchmanagement.adapters.MatchingAdapter;
@@ -100,5 +102,9 @@ public class MatchService {
 
     private Organization getOrganization(long profileId) {
         return organizationRepository.findByOrganizationProfileId(profileId);
+    }
+
+    public void deleteMatchById(long matchId) {
+        matchRepository.deleteById(matchId);
     }
 }
