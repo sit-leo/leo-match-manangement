@@ -88,19 +88,19 @@ public class MatchController {
     public ResponseEntity<Page<Match>> getLatestMatchWithPageNumber(@RequestAttribute("user") User user,@RequestParam("page") int pageNumber
                                                                     ){
         Pageable pageable = PageRequest.of(pageNumber-1,6, Sort.by("createAt").descending());
-        return new ResponseEntity<>(matchService.findAll(user.getProfileId(),pageable,user.getRole()),HttpStatus.OK);
+        return new ResponseEntity<>(matchService.findAll(user,pageable),HttpStatus.OK);
     }
 
     @GetMapping("/matches/last-chance")
     public ResponseEntity<Page<Match>> getLastChanceMatchWithPageNumber(@RequestAttribute("user") User user,@RequestParam("page") int pageNumber){
         Pageable pageable = PageRequest.of(pageNumber-1,3);
-        return new ResponseEntity<>(matchService.getLastChanceMatches(user.getProfileId(),pageable,user.getRole()),HttpStatus.OK);
+        return new ResponseEntity<>(matchService.getLastChanceMatches(user,pageable),HttpStatus.OK);
     }
 
     @GetMapping("/matches/popular")
     public ResponseEntity<Page<Match>> getPopularMatchesWithPageNumber(@RequestAttribute("user") User user ,@RequestParam("page") int pageNumber){
         Pageable pageable = PageRequest.of(pageNumber-1, 3, Sort.by("popularity").descending());
-        return new ResponseEntity<>(matchService.findAll(user.getProfileId(),pageable,user.getRole()),HttpStatus.OK);
+        return new ResponseEntity<>(matchService.findAll(user,pageable),HttpStatus.OK);
     }
 
 }

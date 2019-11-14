@@ -35,6 +35,10 @@ public class MatchService {
     @Autowired
     private OrganizationRepository organizationRepository;
 
+    private final String APPLICANT_ROLE = "applicant";
+    private final String RECRUITER_ROLE = "recruiter";
+    private final String ORGANIZER_ROLE = "organizer";
+
     private final Date currentDate =  java.sql.Date.valueOf(LocalDate.now(ZoneId.of("Asia/Bangkok")));
 
     public Match getMatchByMatchId(long id) {
@@ -51,31 +55,40 @@ public class MatchService {
         return matchRepository.getMatchesByAnnounceDateEndDateAfterAndIdIn(currentDate,matchId);
     }
 
-    public Page<Match> findAll(long profileId,Pageable pagenable,String role){
+    public Page<Match> findAll(User user,Pageable pagenable){
         List<Long> orgIdList = new ArrayList<>();
-        if(role.equals("applicant")) {
+        String role = user.getRole();
+        long profileId = user.getProfileId();
+        if(role.equals(APPLICANT_ROLE)) {
             orgIdList = organizationService.getOrganizationIdListByApplicantId(profileId);
-        }else if (role.equals("recruiter")){
+        }else if (role.equals(RECRUITER_ROLE)){
             orgIdList =  organizationService.getOrganizationIdListByRecruiterId(profileId);
+        }else if(role.equals(ORGANIZER_ROLE)){
+            orgIdList.add(organizationService.getByOrganizationProfileId(profileId).getId());
         }
-        return  matchRepository.findAllByOrganizationIdIn(orgIdList,pagenable);
+        return  matchRepository.findAllByOrganizationIdIn(pagenable,orgIdList);
     }
 
-    public Page<Match> getLastChanceMatches(long profileId,Pageable pageable,String role){
+    public Page<Match> getLastChanceMatches(User user,Pageable pageable){
         List<Long> orgIdList = new ArrayList<>();
-        if(role.equals("applicant")){
+        String role = user.getRole();
+        long profileId = user.getProfileId();
+        if(role.equals(APPLICANT_ROLE)){
             orgIdList = organizationService.getOrganizationIdListByApplicantId(profileId);
-        }else if(role.equals("recruiter")){
+        }else if(role.equals(RECRUITER_ROLE)){
             orgIdList = organizationService.getOrganizationIdListByRecruiterId(profileId);
+        }else if(role.equals(ORGANIZER_ROLE)){
+            orgIdList.add(organizationService.getByOrganizationProfileId(profileId).getId());
         }
+
         return matchRepository.getLastChanceMatches(pageable,orgIdList);
     }
 
     public Match updateNumberOfUser(User user,Match match){
-        if(user.getRole().equals("recruiter")){
+        if(user.getRole().equals(RECRUITER_ROLE)){
             int newNumberOfRecruiter = match.getNumOfRecruiter()+1;
             match.setNumOfRecruiter(newNumberOfRecruiter);
-        }else if(user.getRole().equals("applicant")){
+        }else if(user.getRole().equals(APPLICANT_ROLE)){
             int newNumberOfApplicant = match.getNumOfApplicant()+1;
             match.setNumOfApplicant(newNumberOfApplicant);
         }

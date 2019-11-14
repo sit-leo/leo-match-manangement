@@ -121,7 +121,7 @@ public class OrganizationService {
         return matchRepository.countByOrganizationId(organization.getId());
     }
 
-    private Organization getByOrganizationProfileId(long profileId) {
+    public Organization getByOrganizationProfileId(long profileId) {
         return organizationRepository.findByOrganizationProfileId(profileId);
     }
 
