@@ -88,7 +88,8 @@ public class MatchController {
     public ResponseEntity<Page<Match>> getLatestMatchWithPageNumber(@RequestAttribute("user") User user,@RequestParam("page") int pageNumber
                                                                     ){
         Pageable pageable = PageRequest.of(pageNumber-1,6, Sort.by("createAt").descending());
-        return new ResponseEntity<>(matchService.findAll(user.getProfileId(),pageable,user.getRole()),HttpStatus.OK);
+        Page<Match> matches = matchService.findAll(user.getProfileId(), pageable, user.getRole());
+        return new ResponseEntity<>(matches, HttpStatus.OK);
     }
 
     @GetMapping("/matches/last-chance")

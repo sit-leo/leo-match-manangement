@@ -56,6 +56,9 @@ public class MatchService {
         }else if (role.equals("recruiter")){
             orgIdList =  organizationService.getOrganizationIdListByRecruiterId(profileId);
         }
+        if (orgIdList.size() == 0) {
+            return Page.empty();
+        }
         return  matchRepository.findAllByOrganizationIdIn(orgIdList,pagenable);
     }
 
@@ -66,7 +69,10 @@ public class MatchService {
         }else if(role.equals("recruiter")){
             orgIdList = organizationService.getOrganizationIdListByRecruiterId(profileId);
         }
-        return matchRepository.getLastChanceMatches(pageable,orgIdList);
+        if (orgIdList.size() == 0) {
+            return Page.empty();
+        }
+        return matchRepository.getLastChanceMatches(pageable, orgIdList);
     }
 
     public Match updateNumberOfUser(User user,Match match){
