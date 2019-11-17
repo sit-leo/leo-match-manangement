@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import app.leo.matchmanagement.dto.IdWithNumberOfApplicantAndRecruiter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,20 @@ public class OrganizationService {
         return result;
     }
 
+    public List<IdWithNumberOfApplicantAndRecruiter> getOrganizationProfileIdListByApplicantId(long applicantId){
+        List<OrganizationApplicant> organizations = organizationApplicantRepository.findDistinctByApplicantProfileIdListIn(applicantId);
+        List<IdWithNumberOfApplicantAndRecruiter> result = new ArrayList<>();
+        for(OrganizationApplicant organizationApplicant:organizations){
+            Organization organization = organizationApplicant.getOrganization();
+            IdWithNumberOfApplicantAndRecruiter idWithNumberOfApplicantAndRecruiter = new IdWithNumberOfApplicantAndRecruiter();
+            idWithNumberOfApplicantAndRecruiter.setId(organization.getOrganizationProfileId());
+            idWithNumberOfApplicantAndRecruiter.setNumberOfApplicants(organization.getNumOfApplicants());
+            idWithNumberOfApplicantAndRecruiter.setNumberOfRecruiters(organization.getNumOfRecruiters());
+            result.add(idWithNumberOfApplicantAndRecruiter);
+        }
+        return result;
+    }
+
     public List<Long> getOrganizationIdListByRecruiterId(long recruiterId){
         List<OrganizationRecruiter> organizations = organizationRecruiterRepository.findDistinctByRecruiterProfileIdListIn(recruiterId);
         List<Long> result = new ArrayList<>();
@@ -49,6 +64,19 @@ public class OrganizationService {
         return result;
     }
 
+    public List<IdWithNumberOfApplicantAndRecruiter> getOrganizationProfileIdListByRecruiterId(long recruiterId){
+        List<OrganizationRecruiter> organizations = organizationRecruiterRepository.findDistinctByRecruiterProfileIdListIn(recruiterId);
+        List<IdWithNumberOfApplicantAndRecruiter> result = new ArrayList<>();
+        for(OrganizationRecruiter organizationRecruiter:organizations){
+            Organization organization = organizationRecruiter.getOrganization();
+            IdWithNumberOfApplicantAndRecruiter idWithNumberOfApplicantAndRecruiter = new IdWithNumberOfApplicantAndRecruiter();
+            idWithNumberOfApplicantAndRecruiter.setId(organization.getOrganizationProfileId());
+            idWithNumberOfApplicantAndRecruiter.setNumberOfApplicants(organization.getNumOfApplicants());
+            idWithNumberOfApplicantAndRecruiter.setNumberOfRecruiters(organization.getNumOfRecruiters());
+            result.add(idWithNumberOfApplicantAndRecruiter);
+        }
+        return result;
+    }
     public List<Long> getApplicantIdListByOrganizationId(long organizationProfileId){
         Organization organization = getByOrganizationProfileId(organizationProfileId);
         OrganizationApplicant organizationApplicant = organizationApplicantRepository.findByOrganizationId(organization.getId());
@@ -62,6 +90,8 @@ public class OrganizationService {
     }
 
     public Organization createOrganization(Organization organization) {
+        organization.setNumOfApplicants(0);
+        organization.setNumOfRecruiters(0);
         return organizationRepository.save(organization);
     }
 
@@ -91,7 +121,7 @@ public class OrganizationService {
         return matchRepository.countByOrganizationId(organization.getId());
     }
 
-    private Organization getByOrganizationProfileId(long profileId) {
+    public Organization getByOrganizationProfileId(long profileId) {
         return organizationRepository.findByOrganizationProfileId(profileId);
     }
 
@@ -101,18 +131,23 @@ public class OrganizationService {
         List<Long> newApplicantList = organizationApplicant.getApplicantProfileIdList();
         newApplicantList.addAll(idList);
         organizationApplicant.setApplicantProfileIdList(sortList(newApplicantList));
+        organization.setNumOfApplicants(organizationApplicant.getApplicantProfileIdList().size());
+        organizationRepository.save(organization);
         return organizationApplicantRepository.save(organizationApplicant);
     }
 
     private List<Long> sortList(List<Long> list){
         return list.stream().sorted().collect(Collectors.toList());
     }
+
     public OrganizationRecruiter addOrganizationRecruiterList(long organizationProfileId, List<Long> idList) {
         Organization organization = getByOrganizationProfileId(organizationProfileId);
         OrganizationRecruiter organizationRecruiter = organizationRecruiterRepository.findByOrganizationId(organization.getId());
         List<Long> newRecruiterIdList = organizationRecruiter.getRecruiterProfileIdList();
         newRecruiterIdList.addAll(idList);
         organizationRecruiter.setRecruiterProfileIdList(sortList(newRecruiterIdList));
+        organization.setNumOfRecruiters(organizationRecruiter.getRecruiterProfileIdList().size());
+        organizationRepository.save(organization);
         return organizationRecruiterRepository.save(organizationRecruiter);
     }
 }

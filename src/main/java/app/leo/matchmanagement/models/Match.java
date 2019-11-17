@@ -34,7 +34,7 @@ public class Match implements Serializable {
 
     private Date announceDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Organization organization;
 
     @CreationTimestamp

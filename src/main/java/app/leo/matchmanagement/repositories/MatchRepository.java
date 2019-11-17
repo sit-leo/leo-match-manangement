@@ -29,11 +29,15 @@ public interface MatchRepository extends JpaRepository<Match,Long> {
     <S extends Match> Page<S> findAll(Example<S> example, Pageable pageable);
 
     @Query(value = "SELECT * FROM matches m where m.end_joining_date BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) AND m.organization_id in (:idList)/*#pageable*/"
-            ,countQuery = "SELECT COUNT(m.id) FROM matches m where m.end_joining_date BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)"
+            ,countQuery = "SELECT COUNT(m.id) FROM matches m where m.end_joining_date BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) AND m.organization_id in (:idList)"
             ,nativeQuery = true)
     Page<Match> getLastChanceMatches(Pageable pageable,List<Long> idList);
 
-    Page<Match> findAllByOrganizationIdIn(List<Long> organizationIdList, Pageable pageable);
+
+    @Query(value= "SELECT * FROM matches m where NOW() >= m.start_joining_date AND NOW() <= m.end_joining_date AND m.organization_id in (:idOrgList)/*#pageable*/ "
+            ,countQuery = "SELECT COUNT(m.id) FROM matches m where NOW() >= m.start_joining_date AND NOW() <= m.end_joining_date AND m.organization_id in (:idOrgList)"
+            ,nativeQuery = true)
+    Page<Match> findAllByOrganizationIdIn(Pageable pageable,List<Long> idOrgList);
 
     Match findTopByOrganizationOrderByIdDesc(Organization organization);
 

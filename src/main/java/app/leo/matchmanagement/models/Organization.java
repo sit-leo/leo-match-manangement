@@ -13,6 +13,8 @@ public class Organization {
     private String name;
     private String description;
     private long organizationProfileId;
+    private int numOfApplicants;
+    private int numOfRecruiters;
 
 
     public long getId() {
@@ -45,5 +47,21 @@ public class Organization {
 
     public void setOrganizationProfileId(long organizationProfileId) {
         this.organizationProfileId = organizationProfileId;
+    }
+
+    public int getNumOfApplicants() {
+        return numOfApplicants;
+    }
+
+    public void setNumOfApplicants(int numOfApplicants) {
+        this.numOfApplicants = numOfApplicants;
+    }
+
+    public int getNumOfRecruiters() {
+        return numOfRecruiters;
+    }
+
+    public void setNumOfRecruiters(int numOfRecruiters) {
+        this.numOfRecruiters = numOfRecruiters;
     }
 }
