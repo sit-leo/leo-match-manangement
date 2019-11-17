@@ -6,12 +6,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import app.leo.matchmanagement.dto.MatchDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import app.leo.matchmanagement.adapters.MatchingAdapter;
 import app.leo.matchmanagement.dto.User;
@@ -19,7 +18,6 @@ import app.leo.matchmanagement.models.Match;
 import app.leo.matchmanagement.models.Organization;
 import app.leo.matchmanagement.repositories.MatchRepository;
 import app.leo.matchmanagement.repositories.OrganizationRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MatchService {
@@ -48,12 +46,12 @@ public class MatchService {
 
     public List<Match> getCurrentMatchByUserId(String token) {
         List<Long> matchId = matchingAdapter.getMatchIdByUserId(token);
-        return matchRepository.getMatchesByStartJoiningDateBeforeAndAnnouceDateAfterAndIdIn(currentDate,matchId);
+        return matchRepository.getMatchesByStartJoiningDateBeforeAndAnnouceDateAfterAndIdIn(currentDate.toString(),matchId);
     }
 
     public List<Match> getEndedMatchByUserId(String token){
         List<Long> matchId = matchingAdapter.getMatchIdByUserId(token);
-        return matchRepository.getMatchesByAnnounceDateEndDateAfterAndIdIn(currentDate,matchId);
+        return matchRepository.getMatchesByAnnounceDateEndDateAfterAndIdIn(currentDate.toString(),matchId);
     }
 
     public Page<Match> findAll(User user,Pageable pagenable){
@@ -112,12 +110,12 @@ public class MatchService {
 
     public List<Match> getCurrentMatchByOrganizationId(long profileId) {
         Organization organization = getOrganization(profileId);
-        return matchRepository.findByStartJoiningDateBeforeAndAnnouceDateAfterAndOrganizationId(currentDate, organization.getId());
+        return matchRepository.findByStartJoiningDateBeforeAndAnnouceDateAfterAndOrganizationId(currentDate.toString(), organization.getId());
     }
 
     public List<Match> getEndedMatchByOrganizationId(long profileId) {
         Organization organization = getOrganization(profileId);
-        return matchRepository.findEndedMatchesByAnnounceDateEndDateAfterAndOrganizationId(currentDate, organization.getId());
+        return matchRepository.findEndedMatchesByAnnounceDateEndDateAfterAndOrganizationId(currentDate.toString(), organization.getId());
     }
 
     private Organization getOrganization(long profileId) {

@@ -1,7 +1,5 @@
 package app.leo.matchmanagement.repositories;
 
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Example;
@@ -20,10 +18,10 @@ public interface MatchRepository extends JpaRepository<Match,Long> {
     Match getMatchById(long id);
 
     @Query(value = "select * from matches m where m.start_joining_date <= ?1 and m.announce_date >= ?1 and m.id in ?2 ",nativeQuery = true)
-    List<Match> getMatchesByStartJoiningDateBeforeAndAnnouceDateAfterAndIdIn(Date currentDate, Collection<Long> matchIdList);
+    List<Match> getMatchesByStartJoiningDateBeforeAndAnnouceDateAfterAndIdIn(String currentDate, List<Long> matchIdList);
 
     @Query(value = "select * from matches m where m.announce_date <= ?1 and m.id in ?2",nativeQuery = true)
-    List<Match> getMatchesByAnnounceDateEndDateAfterAndIdIn(Date currentDate,Collection<Long> matchIdList);
+    List<Match> getMatchesByAnnounceDateEndDateAfterAndIdIn(String currentDate, List<Long> matchIdList);
 
     @Override
     <S extends Match> Page<S> findAll(Example<S> example, Pageable pageable);
@@ -42,10 +40,10 @@ public interface MatchRepository extends JpaRepository<Match,Long> {
     Match findTopByOrganizationOrderByIdDesc(Organization organization);
 
     @Query(value = "select * from matches m where m.start_joining_date <= ?1 and m.announce_date >= ?1 and m.organization_id = ?2 ",nativeQuery = true)
-    List<Match> findByStartJoiningDateBeforeAndAnnouceDateAfterAndOrganizationId(Date currentDate, Long profileId);
+    List<Match> findByStartJoiningDateBeforeAndAnnouceDateAfterAndOrganizationId(String currentDate, Long profileId);
 
     @Query(value = "select * from matches m where m.announce_date <= ?1 and m.organization_id = ?2",nativeQuery = true)
-    List<Match> findEndedMatchesByAnnounceDateEndDateAfterAndOrganizationId(Date currentDate, Long profileId);
+    List<Match> findEndedMatchesByAnnounceDateEndDateAfterAndOrganizationId(String currentDate, Long profileId);
 
 	  long countByOrganizationId(long id);
 }
