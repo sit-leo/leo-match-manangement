@@ -103,9 +103,9 @@ public class MatchController {
         return new ResponseEntity<>(matchService.findAll(user,pageable),HttpStatus.OK);
     }
 
-    @GetMapping("/now")
-    public String getCurrentDate(){
-        return matchService.getCurrentDate();
+    @GetMapping("/matches/now")
+    public ResponseEntity<String> getCurrentDate(){
+        return new ResponseEntity<>(matchService.getCurrentDate(),HttpStatus.OK);
     }
 
 }

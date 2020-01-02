@@ -39,11 +39,11 @@ public interface MatchRepository extends JpaRepository<Match,Long> {
 
     Match findTopByOrganizationOrderByIdDesc(Organization organization);
 
-    @Query(value = "select * from matches m where m.start_joining_date <= ?1 and m.announce_date >= ?1 and m.organization_id = ?2 ",nativeQuery = true)
-    List<Match> findByStartJoiningDateBeforeAndAnnouceDateAfterAndOrganizationId(String currentDate, Long profileId);
+    @Query(value = "select * from matches m where m.start_joining_date <= NOW() and m.announce_date >= NOW() and m.organization_id = ?2 ",nativeQuery = true)
+    List<Match> findByStartJoiningDateBeforeAndAnnouceDateAfterAndOrganizationId(Long profileId);
 
-    @Query(value = "select * from matches m where m.announce_date <= ?1 and m.organization_id = ?2",nativeQuery = true)
-    List<Match> findEndedMatchesByAnnounceDateEndDateAfterAndOrganizationId(String currentDate, Long profileId);
+    @Query(value = "select * from matches m where m.announce_date <= NOW() and m.organization_id = ?2",nativeQuery = true)
+    List<Match> findEndedMatchesByAnnounceDateEndDateAfterAndOrganizationId(Long profileId);
 
 	  long countByOrganizationId(long id);
 }

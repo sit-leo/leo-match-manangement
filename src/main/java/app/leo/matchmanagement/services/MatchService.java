@@ -110,12 +110,12 @@ public class MatchService {
 
     public List<Match> getCurrentMatchByOrganizationId(long profileId) {
         Organization organization = getOrganization(profileId);
-        return matchRepository.findByStartJoiningDateBeforeAndAnnouceDateAfterAndOrganizationId(currentDate.toString(), organization.getId());
+        return matchRepository.findByStartJoiningDateBeforeAndAnnouceDateAfterAndOrganizationId(organization.getId());
     }
 
     public List<Match> getEndedMatchByOrganizationId(long profileId) {
         Organization organization = getOrganization(profileId);
-        return matchRepository.findEndedMatchesByAnnounceDateEndDateAfterAndOrganizationId(currentDate.toString(), organization.getId());
+        return matchRepository.findEndedMatchesByAnnounceDateEndDateAfterAndOrganizationId(organization.getId());
     }
 
     private Organization getOrganization(long profileId) {
