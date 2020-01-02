@@ -126,4 +126,8 @@ public class MatchService {
     public void deleteMatchById(long matchId) {
         matchRepository.deleteById(matchId);
     }
+
+    public String getCurrentDate(){
+        return currentDate.toString();
+    }
 }
